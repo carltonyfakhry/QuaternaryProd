@@ -11,5 +11,5 @@ install_github("carltonyfakhry/QuaternaryProd")
 For an introduction to the Quaternary Product Scoring Statistic and for an example on how to compute it over the publicly available network *Stringdb*, please see 
 the *Vignette* for this package using the following:
 ```{R}
-browseVignettes("QuaternaryProd")
+browseVignettes("QuaternaryProd", build_vignettes = TRUE)
 ```
