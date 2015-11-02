@@ -199,7 +199,7 @@ double get_probability_4by3(IntegerVector vec, double num, double total){
 
 IntegerMatrix get_score_increase_moves_4by3(){
   IntegerMatrix moves(23,12);    
-  // 1
+  // Moves that increase the score by 1
   moves.row(0) = NumericVector::create(-1, 1, 1, 0, 0, 0, -1, 0, 0, 0, -1, 1);
   moves.row(1) = NumericVector::create(-1, 1, 1, 0, 1, -1, 0, -1, 0, -1, 0, 1);
   moves.row(2) = NumericVector::create(0, 0, 0, 0, -1, 0, 0, 1, 0, 1, 0, -1);
@@ -214,7 +214,7 @@ IntegerMatrix get_score_increase_moves_4by3(){
   moves.row(11) = NumericVector::create(1, -1, 0, 1, -1, 1, -1, 0, 0, 0, -1, 1);
   moves.row(12) = NumericVector::create(1, -1, 0, 1, 0, 0, 0, -1, 0, -1, 0, 1);
   moves.row(13) = NumericVector::create(1, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 1);
-  // 2
+  // Moves that increase the score by 2
   moves.row(14) = NumericVector::create(-1, 1, 1, 0, 0, -1, 0, 0, 0, 0, 0, 0);
   moves.row(15) = NumericVector::create(0, 0, 0, 1, -1, 0, 0, 0, 0, 1, -1, 0);
   moves.row(16) = NumericVector::create(0, 0, 0, 1, 0, -1, 1, -1, 0, 0, 0, 0);
@@ -223,7 +223,7 @@ IntegerMatrix get_score_increase_moves_4by3(){
   moves.row(19) = NumericVector::create(0, 1, 0, 0, 0, -1, 1, 0, -1, 0, 0, 0);
   moves.row(20) = NumericVector::create(1, -1, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0);
   moves.row(21) = NumericVector::create(1, 0, 0, 0, -1, 0, 0, 1, -1, 0, 0, 0);
-  // 4
+  // Moves that increase the score by 4
   moves.row(22) = NumericVector::create(0, 0, 1, 1, -1, -1, 0, 0, 0, 0, 0, 0);
   return moves;
 }
@@ -237,7 +237,7 @@ IntegerMatrix get_score_increase_moves_4by3(){
 
 IntegerMatrix get_score_decrease_moves_4by3(){
   IntegerMatrix moves(33,12);
-  // -1
+  // Moves that decrease the score by -1
   moves.row(0) = NumericVector::create(-1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, -1);
   moves.row(1) = NumericVector::create(-1, 0, 0, 1, 1, 0, 0, -2, 1, 0, -1, 1);
   moves.row(2) = NumericVector::create(-1, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 1);
@@ -261,7 +261,7 @@ IntegerMatrix get_score_decrease_moves_4by3(){
   moves.row(20) = NumericVector::create(1, 0, -1, 0, 0, 1, 0, 0, -1, 0, -1, 1);
   moves.row(21) = NumericVector::create(1, 0, 0, -1, 0, 1, -1, 1, -1, -1, 0, 1);
   moves.row(22) = NumericVector::create(2, -1, -1, 0, 0, 1, 0, 0, -1, -1, 0, 1);
-  // -2
+  // Moves that decrease the score by -2
   moves.row(23) = NumericVector::create(-1, 0, 0, 0, 1, 0, 0, -1, 1, 0, 0, 0);
   moves.row(24) = NumericVector::create(-1, 1, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0);
   moves.row(25) = NumericVector::create(0, -1, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0);
@@ -271,7 +271,7 @@ IntegerMatrix get_score_decrease_moves_4by3(){
   moves.row(29) = NumericVector::create(0, 0, 0, -1, 1, 0, 0, 0, 0, -1, 1, 0);
   moves.row(30) = NumericVector::create(1, -1, -1, 0, 0, 1, 0, 0, 0, 0, 0, 0);
   moves.row(31) = NumericVector::create(1, 0, -1, -1, 0, 1, 0, 1, -1, 0, 0, 0);
-  // -4
+  // Moves that decrease the score by -4
   moves.row(32) = NumericVector::create(0, 0, -1, -1, 1, 1, 0, 0, 0, 0, 0, 0);
   return moves;
 }
