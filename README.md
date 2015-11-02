@@ -8,7 +8,7 @@ library(devtools)
 install_github("carltonyfakhry/QuaternaryProd")
 ```
 ## Usage
-For an introduction to the Quaternary Product Scoring Statistic and for an example on how to compute it, please see 
+For an introduction to the Quaternary Product Scoring Statistic and for an example on how to compute it over the publicly available network *Stringdb*, please see 
 the *Vignette* for this package using the following:
 ```{R}
 browseVignettes("QuaternaryProd")
