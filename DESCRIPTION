@@ -8,8 +8,8 @@ Authors@R: c(
     person("Ping", "Chen", role = "ths"),
     person("Kourosh", "Zarringhalam", role = c("aut","ths")))
 Description: Computes the Quaternary Product Scoring Statistic for Signed Causal Graphs.
-License: GPL (>=3)
-Depends: R (>= 3.2.0), Rcpp (>= 0.11.3)
+License: GPL(>=3)
+Depends: R(>= 3.2.0), Rcpp(>= 0.11.3)
 Suggests: readr, org.Hs.eg.db, dplyr, stringr
 LinkingTo: Rcpp
 LazyData: true
