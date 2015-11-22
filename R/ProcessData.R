@@ -74,7 +74,117 @@ getGeneVals <- function(trguids, evidence){
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
 #' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, In submission.
+#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#'            
+#'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
+#'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
+#'             Epub 2012 Nov 29'.
+#'             
+#' @examples 
+#' # In this section, we show how to parse the Stringdb 
+#' # Homo Sapien protein actions network and prepare 
+#' # it to be used with our package. First, we need to 
+#' # upload the network which is attached to QuaternaryProd
+#' # for convenience.
+#'  
+#' library(readr)
+#' library(org.Hs.eg.db)
+#' library(dplyr)
+#' library(stringr)
+#'         
+#' # Get the full file name containing the STRINGdb relations
+#' ff <- system.file("extdata", "9606.protein.actions.v10.txt.gz",
+#'                                                      package="QuaternaryProd")
+#' all_rels <- read_tsv(gzfile(ff), col_names = T)
+#'           
+#'           
+#' # Next, we filter out the important columns and important 
+#' # relations. We remove all rows which do not have a relation
+#' # activation, inhibition and expression. Moreover, we
+#' # also consider reverse causality for any relation which has
+#' # a direction value equal to 0.
+#'           
+#' # Set new names for columns
+#' names(all_rels) <- c("srcuid", "trguid", "mode", "action", "direction","score")
+#' Rels <- all_rels[, c("srcuid", "trguid", "mode", "direction")]
+#'          
+#' # Get all rows with causal relations
+#' Rels <- Rels[Rels$mode %in% c("activation", "inhibition","expression"),]
+#'          
+#' # Get causal relations where direction is not specified, 
+#' # and consider reversed direction of causality as a valid 
+#' # causal relation
+#' Bidirectional <- Rels[Rels$direction == 0 , 
+#'                                    c("trguid", "srcuid", "mode", "direction")]
+#' names(Bidirectional) <- c("srcuid", "trguid", "mode", "direction")
+#' Rels <- unique(bind_rows(Rels, Bidirectional))
+#' Rels$direction <- NULL
+#'
+#' # Rename activation as increases, inhibition as decreases, 
+#' # expression as regulates
+#' Rels$mode <- sub("activation", "increases", Rels$mode)
+#' Rels$mode <- sub("inhibition", "decreases", Rels$mode)
+#' Rels$mode <- sub("expression", "regulates", Rels$mode)
+#'           
+#' # Third, we extract the protein entities from the network, and
+#' # we map them to their respective genes. Note, the entities could
+#' # have been possibly a drug or compound, but we are working with
+#' # this protein interactions network for the purpose of providing
+#' # a nontrivial example.
+#'           
+#' # Get all unique target protein ensemble ids in the causal network
+#' allEns <- unique(c(Rels$srcuid, Rels$trguid))
+#'           
+#' # Map ensemble protein ids to entrez gene ids
+#' map <- org.Hs.egENSEMBLPROT2EG
+#' id <- unlist(mget(sub("9606.","",allEns), map, ifnotfound=NA))
+#' id[is.na(id)] <- "-1"
+#' uid <- paste("9606.", names(id), sep="")
+#'           
+#' # Function to map entrez ids to gene symbols
+#' map <- org.Hs.egSYMBOL
+#' symbol <- unlist(mget(id, map, ifnotfound=NA))
+#' symbol[is.na(symbol)] <- "-1"
+#'           
+#' # Create data frame of STRINGdb protein Id, entrez id and gene
+#' # symbol and type of entity
+#' Ents <- data_frame(uid, id, symbol, type="protein")
+#' Ents <- Ents[Ents$uid %in% allEns,]
+#'           
+#' # Add mRNAs to entities
+#' uid <- paste("mRNA_", uid, sep = "")
+#' mRNAs <- data_frame(uid, id, symbol, type="mRNA")
+#' Ents <- bind_rows(Ents, mRNAs)
+#'           
+#' # Get all unique relations
+#' Rels <- Rels[Rels$srcuid %in% Ents$uid & Rels$trguid %in% Ents$uid,]
+#' Rels <- unique(Rels)
+#' Rels$trguid <- paste("mRNA_", Rels$trguid, sep="")
+#'           
+#' # Leave source proteins which contain at least 10 edges
+#' sufficientRels <- group_by(Rels, srcuid) %>% summarise(count=n())
+#' sufficientRels <- sufficientRels %>% filter(count > 10)
+#' Rels <- Rels %>% filter(srcuid %in% sufficientRels$srcuid)
+#'           
+#' # Given new gene expression data, we can compute the scores and P-values
+#' # for all source nodes in the network. BioQCREtoNet is a specialized
+#' # function for this purpose.
+#'           
+#' # Gene expression data
+#' evidence1 <- system.file("extdata", "e2f3_sig.txt", package = "QuaternaryProd")
+#' evidence1 <- read.table(evidence1, sep = "\t", header = T, stringsAsFactors = F)
+#' evidence2 <- system.file("extdata", "myc_sig.txt", package = "QuaternaryProd")
+#' evidence2 <- read.table(evidence2, sep = "\t", header = T, stringsAsFactors = F)
+#' evidence3 <- system.file("extdata", "ras_sig.txt", package = "QuaternaryProd")
+#' evidence3 <- read.table(evidence3, sep = "\t", header = T, stringsAsFactors = F)
+#'           
+#' # Remove duplicated entrez ids in evidence and rename column names appropriately
+#' evidence1 <- evidence1[!duplicated(evidence1$entrez),]
+#' names(evidence1) <- c("entrez", "pvalue", "fc")
+#'           
+#' # Run Quaternary CRE for entire Knowledge base on new evidence
+#' # which computes the statistic for each of the source proteins
+#' CRE_results <- BioQCREtoNet(Rels, evidence1, Ents)
 #'
 #' @export
 

@@ -19,8 +19,12 @@
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam 
 #' 
 #' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, In submission.
-#' 
+#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#'            
+#'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
+#'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
+#'             Epub 2012 Nov 29'.
+#'             
 #' @examples # Compute the support of the Quaternary Product Scoring distribution with the given margins.
 #' QP_Support(50,50,50,0,50,50,50)
 #' 
@@ -88,8 +92,12 @@ QP_Support <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z){
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
 #' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, In submission.
-#' 
+#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#'            
+#'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
+#'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
+#'             Epub 2012 Nov 29'.
+#'             
 #' @details This function computes the probability for each score in the support of the distribution.
 #'          The returned value is a vector of probabilities where the 
 #'          returned vector has names set equal to the corresponding scores.
@@ -100,8 +108,8 @@ QP_Support <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z){
 #'          a very reasonable threshold. Setting the threshold to higher values which are smaller than 1 will lead to understimating
 #'          the probabilities of each score since more tables will be ignored. 
 #' 
-#' @examples # Compute the probability mass function of the Quaternary Product Scoring 
-#' # Statistic for the given table margins.
+#' @examples # Compute the probability mass function of the Quaternary 
+#'           # Product Scoring Statistic for the given table margins.
 #' pmf <- QP_Pmf(50,50,50,0,50,50,50)
 #' 
 #' @seealso \code{\link{QP_Pvalue}}, \code{\link{QP_Support}}
@@ -173,15 +181,20 @@ QP_Pmf <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16){
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
 #' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, In submission.
-#' 
+#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#'            
+#'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
+#'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
+#'             Epub 2012 Nov 29'.
+#'             
 #' @details Setting epsilon to zero will compute the probability mass function without ignoring any matrices 
 #'          with probabilities smaller than epsilon*D_max (D_max is the numerator associated with the matrix of highest
 #'          probability for the given constraints). The default value of 1e-16 is experimentally validated to be 
 #'          a very reasonable threshold. Setting the threshold to higher values which are smaller than 1 will lead to understimating
 #'          the probabilities of each score since more tables will be ignored. 
 #' 
-#' @examples # Computing The p-value of score 50 for the given table margins. 
+#' @examples # Computing The p-value of score 50 
+#'           # for the given table margins. 
 #' pval <- QP_Pvalue(50,50,50,50,0,50,50,50)
 #' 
 #' @seealso \code{\link{QP_SigPvalue}}
@@ -256,8 +269,12 @@ QP_Pvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
 #' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, In submission.
-#' 
+#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#'            
+#'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
+#'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
+#'             Epub 2012 Nov 29'.
+#'              
 #' @details Setting epsilon to zero will compute the probability mass function without ignoring any matrices 
 #'          with probabilities smaller than epsilon*D_max (D_max is the numerator associated with the matrix of highest
 #'          probability for the given constraints). The default value of 1e-16 is experimentally validated to be 
@@ -265,7 +282,8 @@ QP_Pvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)
 #'          the probabilities of each score since more tables will be ignored. If the score is not statistically significant, 
 #'          then a value of -1 will be returned.
 #' 
-#' @examples # Computing The p-value of score 50 for the given table margins. 
+#' @examples # Computing The p-value of score 50 
+#'           # for the given table margins. 
 #' pval <- QP_SigPvalue(50,50,50,50,0,50,50,50)
 #' 
 #' @seealso \code{\link{QP_Pvalue}}
@@ -337,8 +355,12 @@ QP_SigPvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
 #' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, In submission.
-#' 
+#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#'            
+#'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
+#'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
+#'             Epub 2012 Nov 29'.
+#'              
 #' @details Setting epsilon to zero will compute the probability mass function without ignoring any matrices 
 #'          with probabilities smaller than epsilon*D_max (D_max is the numerator associated with the matrix of highest
 #'          probability for the given constraints). The default value of 1e-16 is experimentally validated to be 
@@ -348,10 +370,11 @@ QP_SigPvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-
 #'          For computing p-values, the user is advised to use the p-value function which is optimized
 #'          for such purposes.
 #' 
-#' @examples # Computing The probability of score 50 for the given table margins. 
+#' @examples # Computing The probability of score 50 
+#'           # for the given table margins. 
 #' prob <- QP_Probability(0,50,50,50,0,50,50,50)
 #' 
-#' @seealso \code{\link{QP_Pmf}}, \code{\link{QP_Pvalue}}, \code(\link{QP_SigPvalue})
+#' @seealso \code{\link{QP_Pmf}}, \code{\link{QP_Pvalue}}, \code{\link{QP_SigPvalue}}
 #' 
 #' @export
 
