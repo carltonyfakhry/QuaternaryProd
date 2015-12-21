@@ -28,7 +28,7 @@ library(stringr)
 
 # Get the full file name containing the STRINGdb relations
 ff <- system.file("extdata", "9606.protein.actions.v10.txt.gz", package="QuaternaryProd") 
-all_rels <- read_tsv(gzfile(ff), col_names = T)
+all_rels <- read_tsv(gzfile(ff), col_names = TRUE)
 
 
 ## ---- message=FALSE------------------------------------------------------
@@ -52,8 +52,13 @@ Rels$mode <- sub("activation", "increases", Rels$mode)
 Rels$mode <- sub("inhibition", "decreases", Rels$mode)
 Rels$mode <- sub("expression", "regulates", Rels$mode)
 
+# Get a subset of the network: Skip this step if you want the P-values 
+# of the scores corresponding to the source nodes computed over the 
+# entire network. 
+Rels <- Rels[sample(1:nrow(Rels), 40000, replace=FALSE),]
+
 ## ---- message=FALSE------------------------------------------------------
-# Get all unique target protein ensemble ids in the causal network
+# Get all unique protein ensemble ids in the causal network
 allEns <- unique(c(Rels$srcuid, Rels$trguid))
 
 # Map ensemble protein ids to entrez gene ids 
@@ -90,11 +95,11 @@ Rels <- Rels %>% filter(srcuid %in% sufficientRels$srcuid)
 ## ----results='hide', message=FALSE---------------------------------------
 # Gene expression data
 evidence1 <- system.file("extdata", "e2f3_sig.txt", package = "QuaternaryProd") 
-evidence1 <- read.table(evidence1, sep = "\t", header = T, stringsAsFactors = F)
+evidence1 <- read.table(evidence1, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
 evidence2 <- system.file("extdata", "myc_sig.txt", package = "QuaternaryProd") 
-evidence2 <- read.table(evidence2, sep = "\t", header = T, stringsAsFactors = F)
+evidence2 <- read.table(evidence2, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
 evidence3 <- system.file("extdata", "ras_sig.txt", package = "QuaternaryProd") 
-evidence3 <- read.table(evidence3, sep = "\t", header = T, stringsAsFactors = F)
+evidence3 <- read.table(evidence3, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
 
 # Remove duplicated entrez ids in evidence and rename column names appropriately
 evidence1 <- evidence1[!duplicated(evidence1$entrez),]

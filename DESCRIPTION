@@ -2,7 +2,7 @@ Package: QuaternaryProd
 Type: Package
 Title: Computes the Quaternary Product Scoring Statistic for Signed and Unsigned
     Causal Graphs
-Version: 0.99.1
+Version: 0.99.2
 Date: 2015-10-22
 Authors@R: c(
     person("Carl", "Fakhry", email = "cfakhry@cs.umb.edu", role = c("cre","aut")),
@@ -28,7 +28,8 @@ Suggests:
     readr,
     org.Hs.eg.db,
     dplyr,
-    stringr
+    stringr,
+    knitr
 LinkingTo: Rcpp
 LazyData: true
 VignetteBuilder: knitr

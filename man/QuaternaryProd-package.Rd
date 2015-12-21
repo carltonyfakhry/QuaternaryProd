@@ -23,7 +23,7 @@ One of the most challenging problems in computational
 \tabular{ll}{
 Package: \tab QuaternaryProd\cr
 Type: \tab Package\cr
-Version: \tab 0.99.1\cr
+Version: \tab 0.99.2\cr
 Date: \tab 2015-10-22\cr
 License: \tab GPL (>= 2)\cr
 }
