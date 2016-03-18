@@ -1,6 +1,6 @@
 #' Computes the support for the scores.
 #' 
-#' @description This function computes the support of the Quaternary Product Scoring distribution
+#' @description This function computes the support of the Quaternary Dot Product Scoring distribution
 #' for signed causal graphs. This includes all scores which have probabilities strictly greater than 0.
 #' 
 #' @usage QP_Support(q_p, q_m, q_z, q_r, n_p, n_m, n_z)
@@ -18,14 +18,14 @@
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam 
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
+#'             graphs: new methods and their practical utility on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
 #'             Epub 2012 Nov 29'.
 #'             
-#' @examples # Compute the support of the Quaternary Product Scoring distribution with the given margins.
+#' @examples # Compute the support of the Quaternary Dot Product Scoring distribution with the given margins.
 #' QP_Support(50,50,50,0,50,50,50)
 #' 
 #' @export
@@ -91,8 +91,8 @@ QP_Support <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z){
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
+#'             graphs: new methods and their practical utility on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -180,8 +180,8 @@ QP_Pmf <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16){
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
+#'             graphs: new methods and their practical utility on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -268,8 +268,8 @@ QP_Pvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
+#'             graphs: new methods and their practical utility on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -354,8 +354,8 @@ QP_SigPvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam. 
-#'             Identifying Transcriptional Regulators in Signed and Unsigned Causal Networks, 2015, Submitted.
+#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
+#'             graphs: new methods and their practical utility on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 

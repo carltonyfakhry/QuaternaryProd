@@ -442,7 +442,7 @@ double probability_of_score_4by3(IntegerVector arr, double num, double total, do
 /**
  * 
  * This function computes the right sided Pvalue of a given score of the
- * Quaternary Product Scoring Statistic.
+ * Quaternary Dot Product Scoring Statistic.
  * 
  */
 
@@ -576,7 +576,7 @@ double Pvalue_4by3(int q_p, int q_m, int q_r, int q_z, int n_p, int n_m, int n_z
 /**
  * 
  * This function computes the right sided Pvalue of a statistically significant score of the
- * Quaternary Product Scoring Statistic otherwise if the score is not statistically significant,
+ * Quaternary Dot Product Scoring Statistic otherwise if the score is not statistically significant,
  * a value of -1 is returned.
  * 
  */
@@ -726,7 +726,7 @@ double SigPvalue_4by3(int q_p, int q_m, int q_r, int q_z, int n_p, int n_m, int 
 
 /**
  * 
- * Computes the support of the Quaternary Product Scoring Statistic.
+ * Computes the support of the Quaternary Dot Product Scoring Statistic.
  * 
  */
 
@@ -793,7 +793,7 @@ IntegerVector domain_4by3(int q_p, int q_m, int q_r, int q_z, int n_p, int n_m, 
 
 /**
  * 
- * Computes the pmf of the Quaternary Product Scoring Statistic.
+ * Computes the pmf of the Quaternary Dot Product Scoring Statistic.
  * 
  */
 
@@ -824,7 +824,7 @@ NumericVector pmf_4by3(int q_p, int q_m, int q_r, int q_z, int n_p, int n_m, int
   // Get numerator of the D-value.
   double num = get_numerator_4by3(constraints);
   
-  // Get the Denominator of the Quaternary Product probability.
+  // Get the Denominator of the Quaternary Dot Product probability.
   double total = get_total_4by3(constraints);
   
   // Get the matrix with highest D-value.
@@ -898,7 +898,7 @@ double user_probability_of_score_4by3(int target_score, int q_p, int q_m, int q_
   // Get numerator of the D-value.
   double num = get_numerator_4by3(constraints);
   
-  // Get the Denominator of the Quaternary Product probability.
+  // Get the Denominator of the Quaternary Dot Product probability.
   double total = get_total_4by3(constraints);
   
   // Get matrices with min and max scores.

@@ -25,6 +25,7 @@ library(readr)
 library(org.Hs.eg.db)
 library(dplyr)
 library(stringr)
+library(fdrtool)
 
 # Get the full file name containing the STRINGdb relations
 ff <- system.file("extdata", "9606.protein.actions.v10.txt.gz", package="QuaternaryProd") 
@@ -51,6 +52,7 @@ Rels$direction <- NULL
 Rels$mode <- sub("activation", "increases", Rels$mode)
 Rels$mode <- sub("inhibition", "decreases", Rels$mode)
 Rels$mode <- sub("expression", "regulates", Rels$mode)
+Rels <- unique(Rels)
 
 # Get a subset of the network: Skip this step if you want the P-values 
 # of the scores corresponding to the source nodes computed over the 
@@ -76,36 +78,22 @@ symbol[is.na(symbol)] <- "-1"
 Ents <- data_frame(uid, id, symbol, type="protein")
 Ents <- Ents[Ents$uid %in% allEns,]
 
+# Remove ensemble ids in entities with duplicated entrez id
+Ents <- Ents[!duplicated(Ents$id),]
+
 # Add mRNAs to entities
-uid <- paste("mRNA_", uid, sep = "")
-mRNAs <- data_frame(uid, id, symbol, type="mRNA")
+uid <- paste("mRNA_", Ents$uid, sep = "")
+mRNAs <- data_frame(uid=uid, id=Ents$id, symbol=Ents$symbol, type="mRNA")
 Ents <- bind_rows(Ents, mRNAs)
 
 ## ---- message=FALSE------------------------------------------------------
 # Get all unique relations
+Rels$trguid <- paste("mRNA_", Rels$trguid, sep="")
 Rels <- Rels[Rels$srcuid %in% Ents$uid & Rels$trguid %in% Ents$uid,]
 Rels <- unique(Rels)
-Rels$trguid <- paste("mRNA_", Rels$trguid, sep="")
 
 # Leave source proteins which contain at least 10 edges
 sufficientRels <- group_by(Rels, srcuid) %>% summarise(count=n()) 
 sufficientRels <- sufficientRels %>% filter(count > 10)
 Rels <- Rels %>% filter(srcuid %in% sufficientRels$srcuid)
-
-## ----results='hide', message=FALSE---------------------------------------
-# Gene expression data
-evidence1 <- system.file("extdata", "e2f3_sig.txt", package = "QuaternaryProd") 
-evidence1 <- read.table(evidence1, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-evidence2 <- system.file("extdata", "myc_sig.txt", package = "QuaternaryProd") 
-evidence2 <- read.table(evidence2, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-evidence3 <- system.file("extdata", "ras_sig.txt", package = "QuaternaryProd") 
-evidence3 <- read.table(evidence3, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-
-# Remove duplicated entrez ids in evidence and rename column names appropriately
-evidence1 <- evidence1[!duplicated(evidence1$entrez),]
-names(evidence1) <- c("entrez", "pvalue", "fc")
-
-# Run Quaternary CRE for entire Knowledge base on new evidence
-# which computes the statistic for each of the source proteins
-CRE_results <- BioQCREtoNet(Rels, evidence1, Ents)
 

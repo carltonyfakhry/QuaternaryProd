@@ -1,6 +1,6 @@
 Package: QuaternaryProd
 Type: Package
-Title: Computes the Quaternary Product Scoring Statistic for Signed and Unsigned
+Title: Computes the Quaternary Dot Product Scoring Statistic for Signed and Unsigned
     Causal Graphs
 Version: 0.99.2
 Date: 2015-10-22
@@ -15,10 +15,11 @@ Description: One of the most challenging problems in computational biology
     available. However, only a fraction of regulatory interactions are tagged as
     either increasing or decreasing a target transcript. This leads to networks
     with a mix of signed and unsigned interactions. In this package, we provide
-    a statistical method (Quaternary Product Scoring Statistic) that will infer
-    likely upstream regulators given (1) a set of up- and down-regulated transcripts
-    from a specific biological experiment and (2) a mixed network of regulatory
-    interactions potentially relevant in the current biological context.
+    a statistical method (Quaternary Dot Product Scoring Statistic or simply the Quaternary 
+    Statistic) that will infer likely upstream regulators given (1) a set of up- 
+    and down-regulated transcripts from a specific biological experiment and (2) a 
+    mixed network of regulatory interactions potentially relevant in the current biological 
+    context.
 License: GPL (>=3)
 biocViews: GraphAndNetwork, GeneExpression, Transcription
 Depends:
@@ -29,7 +30,8 @@ Suggests:
     org.Hs.eg.db,
     dplyr,
     stringr,
-    knitr
+    knitr,
+    fdrtool
 LinkingTo: Rcpp
 LazyData: true
 VignetteBuilder: knitr

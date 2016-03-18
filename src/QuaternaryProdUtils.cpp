@@ -134,7 +134,7 @@ double get_measure_4by3(IntegerVector vec){
 
 /**
  *
- * Get the numerator of the numerator of the Quaternary Product 
+ * Get the numerator of the numerator of the Quaternary Dot Product 
  * Probability distribution.
  * 
  */
@@ -149,7 +149,7 @@ double get_numerator_4by3(IntegerVector constraints){
 
 /**
  * 
- * Get the denominator of the Quaternary Product Probability.
+ * Get the denominator of the Quaternary Dot Product Probability.
  * 
  */
 
