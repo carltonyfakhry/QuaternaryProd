@@ -202,7 +202,7 @@ BioQCREtoNet <- function(relations, evidence, entities, method = "Quaternary", f
   
   # Check method
   if(!(method %in% c("Quaternary", "Ternary", "Enrichment"))){
-    stop("Method must be one of Quaternary, Ternary and Enrichment!")
+    stop("Method must be one of Quaternary, Ternary or Enrichment!")
   }
   
   # Check is.Logfc

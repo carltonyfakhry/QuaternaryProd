@@ -2,7 +2,7 @@ Package: QuaternaryProd
 Type: Package
 Title: Computes the Quaternary Dot Product Scoring Statistic for Signed and Unsigned
     Causal Graphs
-Version: 0.99.2
+Version: 0.99.3
 Date: 2015-10-22
 Authors@R: c(
     person("Carl", "Fakhry", email = "cfakhry@cs.umb.edu", role = c("cre","aut")),

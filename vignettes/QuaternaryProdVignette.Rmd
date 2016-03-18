@@ -179,7 +179,7 @@ Rels <- Rels %>% filter(srcuid %in% sufficientRels$srcuid)
 ### Compute Pvalues Over the Network
 \indent  Given new gene expression data, we can compute the scores and p-values for all source nodes in the network. *BioQCREtoNet* is a specialized function for this purpose.
 
-```{r results='hide', include = F, message=FALSE}
+```{r, message=FALSE}
 # Gene expression data
 evidence1 <- system.file("extdata", "e2f3_sig.txt", package = "QuaternaryProd") 
 evidence1 <- read.table(evidence1, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
@@ -206,18 +206,6 @@ CRE_results <- BioQCREtoNet(Rels, evidence1, Ents, is.Logfc = TRUE)
 CRE_results$pvalue <- fdrtool(CRE_results$pvalue, "pvalue", FALSE, 
                                                       FALSE, FALSE, "fndr")$q
 head(CRE_results[order(CRE_results$pvalue), c("uid","name","pvalue")])
-
-CRE_results2 <- BioQCREtoNet(Rels, evidence2, Ents, is.Logfc = TRUE)
-# Get FDR corrected p-values
-CRE_results2$pvalue <- fdrtool(CRE_results2$pvalue, "pvalue", FALSE, 
-                                                      FALSE, FALSE, "fndr")$q
-head(CRE_results2[order(CRE_results2$pvalue), c("uid","name","pvalue")])
-
-CRE_results3 <- BioQCREtoNet(Rels, evidence3, Ents, is.Logfc = TRUE)
-# Get FDR corrected p-values
-CRE_results3$pvalue <- fdrtool(CRE_results3$pvalue, "pvalue", FALSE, 
-                                                      FALSE, FALSE, "fndr")$q
-head(CRE_results3[order(CRE_results3$pvalue), c("uid","name","pvalue")])
 ```
 
 *BioQCREtoNet* returns a data frame containing all the source nodes of the causal network, all of which had their respective score p-value computed. The source nodes are ordered in increasing order (Note: details on the columns of the data frame returned can be found in the help page for *BioQCREtoNet*).
