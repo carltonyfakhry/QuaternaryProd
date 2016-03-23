@@ -1,0 +1,25 @@
+citHeader("Please cite the papers below. Thankyou for using QuaternaryProd.")
+
+
+citEntry(entry = "Article",
+  title        = paste("Interpreting transcriptional changes using ",
+                       "causal graphs: new methods and their practical",
+                       " utility on public networks", sep = ""),
+  author       = personList(as.person("Fakhry, C. T. et al.")),
+  journal      = "submitted",
+  year         = "2016",
+  textVersion  = paste("Fakhry, C. T. et al. (2016). ",
+                       "Interpreting transcriptional changes using causal ",
+                       "graphs: new methods and their practical utility on ",
+                       "public networks. submitted.", sep = ""),
+)
+
+
+citEntry(entry="article",
+        title = "STRING v9.1: protein-protein interaction networks, with increased coverage and integration.",
+        author = "Franceschini A et al.",
+        journal = "Nucleic Acids Research (Database issue)",
+        year = 2013,
+	volume = 41,
+        textVersion = "Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. Epub 2012 Nov 29'."
+)

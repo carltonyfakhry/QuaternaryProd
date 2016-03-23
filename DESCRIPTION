@@ -1,31 +1,38 @@
 Package: QuaternaryProd
 Type: Package
-Title: Computes the Quaternary Product Scoring Statistic for Signed and Unsigned Causal
-          Graphs
-Version: 0.99.3
+Title: Computes the Quaternary Dot Product Scoring Statistic for Signed and Unsigned
+    Causal Graphs
+Version: 0.99.4
 Date: 2015-10-22
-Authors@R: c( person("Carl", "Fakhry", email = "cfakhry@cs.umb.edu", role = c("cre","aut")),
-          person("Ping", "Chen", role = "ths"), person("Kourosh", "Zarringhalam", role =
-          c("aut","ths")))
-Description: One of the most challenging problems in computational biology is inference of
-          active regulatory cascades under specific molecular and environmental
-          perturbations. As our understanding of regulatory mechanisms grows, larger networks
-          of causal and non-causal biological interactions become available. However, only a
-          fraction of regulatory interactions are tagged as either increasing or decreasing a
-          target transcript. This leads to networks with a mix of signed and unsigned
-          interactions. In this package, we provide a statistical method (Quaternary Product
-          Scoring Statistic) that will infer likely upstream regulators given (1) a set of
-          up- and down-regulated transcripts from a specific biological experiment and (2) a
-          mixed network of regulatory interactions potentially relevant in the current
-          biological context.
+Authors@R: c(
+    person("Carl", "Fakhry", email = "cfakhry@cs.umb.edu", role = c("cre","aut")),
+    person("Ping", "Chen", role = "ths"),
+    person("Kourosh", "Zarringhalam", role = c("aut","ths")))
+Description: One of the most challenging problems in computational biology
+    is inference of active regulatory cascades under specific molecular and
+    environmental perturbations. As our understanding of regulatory mechanisms
+    grows, larger networks of causal and non-causal biological interactions become
+    available. However, only a fraction of regulatory interactions are tagged as
+    either increasing or decreasing a target transcript. This leads to networks
+    with a mix of signed and unsigned interactions. In this package, we provide
+    a statistical method (Quaternary Dot Product Scoring Statistic or simply the Quaternary 
+    Statistic) that will infer likely upstream regulators given (1) a set of up- 
+    and down-regulated transcripts from a specific biological experiment and (2) a 
+    mixed network of regulatory interactions potentially relevant in the current biological 
+    context.
 License: GPL (>=3)
 biocViews: GraphAndNetwork, GeneExpression, Transcription
-Depends: R (>= 3.2.0), Rcpp (>= 0.11.3)
-Suggests: readr, org.Hs.eg.db, dplyr, stringr, knitr
+Depends:
+    R (>= 3.2.0),
+    Rcpp (>= 0.11.3)
+Suggests:
+    readr,
+    org.Hs.eg.db,
+    dplyr,
+    stringr,
+    knitr,
+    fdrtool
 LinkingTo: Rcpp
 LazyData: true
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
-NeedsCompilation: yes
-Author: Carl Fakhry [cre, aut], Ping Chen [ths], Kourosh Zarringhalam [aut, ths]
-Maintainer: Carl Fakhry <cfakhry@cs.umb.edu>

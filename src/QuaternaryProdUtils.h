@@ -1,4 +1,4 @@
-// This is the header file for the Quaternary Product Scoring Statistic utils functions.
+// This is the header file for the Quaternary Dot Product Scoring Statistic utils functions.
 
 #ifndef QUATERNARYPRODUTILS
 #define QUATERNARYPRODUTILS
@@ -49,7 +49,7 @@ bool are_equal(IntegerVector vec1, IntegerVector vec2);
    
 /**
  *
- * Get the numerator of the numerator of the Quaternary Product 
+ * Get the numerator of the numerator of the Quaternary Dot Product 
  * Probability distribution.
  * 
  */
@@ -59,7 +59,7 @@ double get_numerator_4by3(IntegerVector constraints);
 
 /**
  * 
- * Get the denominator of the Quaternary Product Probability.
+ * Get the denominator of the Quaternary Dot Product Probability.
  * 
  */
 double get_total_4by3(IntegerVector constraints);
