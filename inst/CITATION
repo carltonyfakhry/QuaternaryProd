@@ -1,14 +1,21 @@
-citHeader("Please cite the papers below. Thankyou for using QuaternaryProd.")
+citHeader("Please cite the papers below. Thank you for using QuaternaryProd.")
 
 
 citEntry(entry = "Article",
   title        = paste("Interpreting transcriptional changes using ",
                        "causal graphs: new methods and their practical",
                        " utility on public networks", sep = ""),
-  author       = personList(as.person("Fakhry, C. T. et al.")),
+  author       = personList(as.person("Fakhry, Carl Tony"),
+                            as.person("Choudhary, Paul"),
+                            as.person("Gutteridge, Alex"),
+                            as.person("Sidders, Ben"),
+                            as.person("Chen, Ping"),
+                            as.person("Ziemek, Daniel"),
+                            as.person("Zarringhalam, Kourosh")),
   journal      = "submitted",
   year         = "2016",
-  textVersion  = paste("Fakhry, C. T. et al. (2016). ",
+  textVersion  = paste("C. T. Fakhry, P. Choudhary, A. Gutteridge, B.",                                                   
+                       " Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). ",
                        "Interpreting transcriptional changes using causal ",
                        "graphs: new methods and their practical utility on ",
                        "public networks. submitted.", sep = ""),

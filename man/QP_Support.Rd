@@ -37,8 +37,9 @@ QP_Support(50,50,50,0,50,50,50)
 Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 }
 \references{
-Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
-            graphs: new methods and their practical utility on public networks. submitted.
+C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
+            Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
+            on public networks. submitted.
            
             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 

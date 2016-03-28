@@ -18,8 +18,9 @@
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam 
 #' 
-#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
-#'             graphs: new methods and their practical utility on public networks. submitted.
+#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
+#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
+#'             on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -71,7 +72,7 @@ QP_Support <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z){
 
 #' Computes the probability mass function of the scores.
 #' 
-#' @description This function computes the probability mass function for the Quaternary 
+#' @description This function computes the probability mass function for the Quaternary Dot
 #' Product Scoring Statistic for signed causal graphs. This includes scores with probabilities strictly 
 #' greater than zero. 
 #' 
@@ -91,8 +92,9 @@ QP_Support <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z){
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
-#'             graphs: new methods and their practical utility on public networks. submitted.
+#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
+#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
+#'             on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -108,8 +110,8 @@ QP_Support <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z){
 #'          a very reasonable threshold. Setting the threshold to higher values which are smaller than 1 will lead to understimating
 #'          the probabilities of each score since more tables will be ignored. 
 #' 
-#' @examples # Compute the probability mass function of the Quaternary 
-#'           # Product Scoring Statistic for the given table margins.
+#' @examples # Compute the probability mass function of the Quaternary Dot
+#' # Product Scoring Statistic for the given table margins.
 #' pmf <- QP_Pmf(50,50,50,0,50,50,50)
 #' 
 #' @seealso \code{\link{QP_Pvalue}}, \code{\link{QP_Support}}
@@ -162,8 +164,8 @@ QP_Pmf <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16){
 
 #' Computes the p-value of a score.
 #' 
-#' @description This function computes the right sided p-value for the Quaternary
-#'              Product Scoring Statistic.
+#' @description This function computes the right sided p-value for the Quaternary 
+#'              Dot Product Scoring Statistic.
 #' @usage QP_Pvalue(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)  
 #' 
 #' @param score The score for which the p-value will be computed.
@@ -180,8 +182,9 @@ QP_Pmf <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16){
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
-#'             graphs: new methods and their practical utility on public networks. submitted.
+#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
+#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
+#'             on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -194,7 +197,7 @@ QP_Pmf <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16){
 #'          the probabilities of each score since more tables will be ignored. 
 #' 
 #' @examples # Computing The p-value of score 50 
-#'           # for the given table margins. 
+#' # for the given table margins. 
 #' pval <- QP_Pvalue(50,50,50,50,0,50,50,50)
 #' 
 #' @seealso \code{\link{QP_SigPvalue}}
@@ -247,7 +250,7 @@ QP_Pvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)
 
 #' Computes the p-value for a statistically significant score.
 #' 
-#' @description This function computes the right sided p-value for the Quaternary
+#' @description This function computes the right sided p-value for the Quaternary Dot
 #'              Product Scoring Statistic for statistically significant scores.
 #' @usage QP_SigPvalue(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16, sig_level = 0.05)  
 #' 
@@ -268,8 +271,9 @@ QP_Pvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
-#'             graphs: new methods and their practical utility on public networks. submitted.
+#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
+#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
+#'             on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -283,7 +287,7 @@ QP_Pvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)
 #'          then a value of -1 will be returned.
 #' 
 #' @examples # Computing The p-value of score 50 
-#'           # for the given table margins. 
+#' # for the given table margins. 
 #' pval <- QP_SigPvalue(50,50,50,50,0,50,50,50)
 #' 
 #' @seealso \code{\link{QP_Pvalue}}
@@ -336,8 +340,8 @@ QP_SigPvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-
 
 #' Computes the probability of a score.
 #' 
-#' @description This function computes the probability of a score in the Ternary or Quaternary
-#'              Product scoring distribution.
+#' @description This function computes the probability of a score in the Quaternary
+#'              Dot Product scoring distribution.
 #' @usage QP_Probability(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)  
 #' 
 #' @param score The score for which the probability will be computed.
@@ -354,8 +358,9 @@ QP_SigPvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references Fakhry, C. T. et al. (2016). Interpreting transcriptional changes using causal 
-#'             graphs: new methods and their practical utility on public networks. submitted.
+#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
+#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
+#'             on public networks. submitted.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -371,7 +376,7 @@ QP_SigPvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-
 #'          for such purposes.
 #' 
 #' @examples # Computing The probability of score 50 
-#'           # for the given table margins. 
+#' # for the given table margins. 
 #' prob <- QP_Probability(0,50,50,50,0,50,50,50)
 #' 
 #' @seealso \code{\link{QP_Pmf}}, \code{\link{QP_Pvalue}}, \code{\link{QP_SigPvalue}}

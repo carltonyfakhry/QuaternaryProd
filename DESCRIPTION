@@ -2,10 +2,10 @@ Package: QuaternaryProd
 Type: Package
 Title: Computes the Quaternary Dot Product Scoring Statistic for Signed and Unsigned
     Causal Graphs
-Version: 0.99.4
+Version: 0.99.5
 Date: 2015-10-22
 Authors@R: c(
-    person("Carl", "Fakhry", email = "cfakhry@cs.umb.edu", role = c("cre","aut")),
+    person("Carl Tony", "Fakhry", email = "cfakhry@cs.umb.edu", role = c("cre","aut")),
     person("Ping", "Chen", role = "ths"),
     person("Kourosh", "Zarringhalam", role = c("aut","ths")))
 Description: One of the most challenging problems in computational biology
