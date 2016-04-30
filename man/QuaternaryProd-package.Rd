@@ -6,24 +6,25 @@
 Computes the Quaternary Dot Product Scoring Statistic for Signed and Unsigned Causal Graphs
 }
 \description{
-One of the most challenging problems in computational
-            biology is inference of active regulatory cascades under specific
-            molecular and environmental perturbations. As our understanding
-            of regulatory mechanisms grows, larger networks of causal and
-            non-causal biological interactions become available. However, only
-            a fraction of regulatory interactions are tagged as either increasing
-            or decreasing a target transcript. This leads to networks with a mix
-            of signed and unsigned interactions. In this package, we provide a
-            statistical method (Quaternary Dot Product Scoring Statistic or simply the Quaternary Statistic) that will infer likely upstream regulators given (1) a
-            set of up- and down-regulated transcripts from a specific biological
-            experiment and (2) a mixed network of regulatory interactions
-            potentially relevant in the current biological context.
+             QuaternaryProd is an R package that performs causal reasoning on biological 
+             networks, including publicly available networks such as String-db. QuaternaryProd 
+             is a free alternative to commercial products such as Quiagen and Inginuity pathway 
+             analysis. For a given a set of differentially expressed genes, QuaternaryProd 
+             computes the significance of upstream regulators in the network by performing causal
+             reasoning using the Quaternary Dot Product Scoring Statistic (Quaternary Statistic),
+             Ternary Dot product Scoring Statistic (Ternary Statistic) and Fisher's exact test. 
+             The Quaternary Statistic handles signed, unsigned and ambiguous edges in the network. 
+             Ambiguity arises when the direction of causality is unknown, or when the source node 
+             (e.g., a protein) has edges with conflicting signs for the same target gene. On the 
+             other hand, the Ternary Statistic provides causal reasoning using the signed and 
+             unambiguous edges only. The Vignette provides more details on the Quaternary Statistic 
+             and illustrates an example of how to perform causal reasoning using String-db. 
 }
 \details{
 \tabular{ll}{
 Package: \tab QuaternaryProd\cr
 Type: \tab Package\cr
-Version: \tab 0.99.5\cr
+Version: \tab 0.99.6\cr
 Date: \tab 2015-10-22\cr
 License: \tab GPL (>= 2)\cr
 }
