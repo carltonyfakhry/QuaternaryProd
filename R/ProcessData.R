@@ -319,9 +319,7 @@ BioQCREtoNet <- function(relations, evidence, entities, method = "Quaternary", f
     evidence[,2] <- ifelse(evidence[,2] > 0, 1, -1)
     names(evidence) <- c("entrez", "val")
     
-  }
-  
-  else{
+  } else{
     
     stop("Please provide a valid evidence data frame containing columns: entrez, fc, pvalue")
   
@@ -376,8 +374,7 @@ BioQCREtoNet <- function(relations, evidence, entities, method = "Quaternary", f
     
     evidence <- data.frame(uid = evidence.tmp$uid, val = evidence.tmp$val, stringsAsFactors = F)
   
-  }
-  else{
+  } else{
     
     stop("Please provide a valid entities data frame containing columns: uid, id, symbol and type!")
     
@@ -442,9 +439,7 @@ BioQCREtoNet <- function(relations, evidence, entities, method = "Quaternary", f
     relations[indices,3] <- "regulates"
     relations <- relations[!duplicated(relations),]
     
-  }
-  
-  else{
+  } else{
     
     stop("Please provide a valid relations data frame containing columns: srcuid, trguid, mode!")
     
@@ -504,14 +499,11 @@ BioQCREtoNet <- function(relations, evidence, entities, method = "Quaternary", f
     
     if (method == "Quaternary"){
       pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Quaternary')
-    }
-    else if (method == "Ternary"){
+    } else if (method == "Ternary"){
       pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Ternary')
-    }
-    else if (method == "Enrichment"){
+    } else if (method == "Enrichment"){
       pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Enrichment')
-    }
-    else {
+    } else {
       stop("Select one of methods: Quaternary, Ternary or Enrichment")
     }
     
@@ -576,7 +568,7 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
     pval.down <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
                             q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
     
-  }else if(method == 'Ternary'){
+  } else if(method == 'Ternary'){
     qR     <- 0
     qZero  <- nzp + nzm + nzz
     nPlus  <- npp + nmp + nzp
@@ -598,8 +590,7 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
                             q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
     
     
-  }
-  else if(method == 'Enrichment'){
+  } else if(method == 'Enrichment'){
     
     nrp    <- npp + nmp + nrp
     nrm    <- npm + nmm + nrm
