@@ -18,9 +18,10 @@
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam 
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
-#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
-#'             on public networks. submitted.
+#' @references Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and
+#'             Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and
+#'             their practical utility on public networks. BMC Bioinformatics, 17:318, 2016. ISSN 1471-2105.
+#'             doi: 10.1186/s12859-016-1181-8.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -92,9 +93,10 @@ QP_Support <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z){
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
-#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
-#'             on public networks. submitted.
+#' @references Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and
+#'             Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and
+#'             their practical utility on public networks. BMC Bioinformatics, 17:318, 2016. ISSN 1471-2105.
+#'             doi: 10.1186/s12859-016-1181-8.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -182,9 +184,10 @@ QP_Pmf <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16){
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
-#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
-#'             on public networks. submitted.
+#' @references Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and
+#'             Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and
+#'             their practical utility on public networks. BMC Bioinformatics, 17:318, 2016. ISSN 1471-2105.
+#'             doi: 10.1186/s12859-016-1181-8.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -271,9 +274,10 @@ QP_Pvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
-#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
-#'             on public networks. submitted.
+#' @references Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and
+#'             Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and
+#'             their practical utility on public networks. BMC Bioinformatics, 17:318, 2016. ISSN 1471-2105.
+#'             doi: 10.1186/s12859-016-1181-8.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
@@ -358,9 +362,10 @@ QP_SigPvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-
 #' 
 #' @author Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
 #' 
-#' @references C. T. Fakhry, P. Choudhary, A. Gutteridge, B. Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). 
-#'             Interpreting transcriptional changes using causal graphs: new methods and their practical utility 
-#'             on public networks. submitted.
+#' @references Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and
+#'             Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and
+#'             their practical utility on public networks. BMC Bioinformatics, 17:318, 2016. ISSN 1471-2105.
+#'             doi: 10.1186/s12859-016-1181-8.
 #'            
 #'             Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage 
 #'             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
