@@ -1,5 +1,6 @@
 # Get the value of regulation of a trguid from the gene expression
 # data (i.e in evidence)
+#'@export 
 getGeneVals <- function(trguids, evidence){
   trguids <- as.vector(trguids) 
   val <- rep(0, length(trguids))
