@@ -24,7 +24,7 @@ Computes the Quaternary Dot Product Scoring Statistic for Signed and Unsigned Ca
 \tabular{ll}{
 Package: \tab QuaternaryProd\cr
 Type: \tab Package\cr
-Version: \tab 1.0.4\cr
+Version: \tab 1.0.5\cr
 Date: \tab 2015-10-22\cr
 License: \tab GPL (>= 2)\cr
 }

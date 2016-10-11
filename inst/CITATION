@@ -12,13 +12,9 @@ citEntry(entry = "Article",
                             as.person("Chen, Ping"),
                             as.person("Ziemek, Daniel"),
                             as.person("Zarringhalam, Kourosh")),
-  journal      = "submitted",
+  journal      = "BMC Bioinformatics",
   year         = "2016",
-  textVersion  = paste("C. T. Fakhry, P. Choudhary, A. Gutteridge, B.",                                                   
-                       " Sidders, P. Chen, D. Ziemek, K. Zarringhalam (2016). ",
-                       "Interpreting transcriptional changes using causal ",
-                       "graphs: new methods and their practical utility on ",
-                       "public networks. submitted.", sep = ""),
+  textVersion  = "Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and their practical utility on public networks. BMC Bioinformatics, 17:318, 2016. ISSN 1471-2105. doi: 10.1186/s12859-016-1181-8."
 )
 
 
