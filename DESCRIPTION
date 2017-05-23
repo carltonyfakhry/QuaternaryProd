@@ -1,0 +1,39 @@
+Package: QuaternaryProd
+Type: Package
+Title: Computes the Quaternary Dot Product Scoring Statistic for Signed and Unsigned
+    Causal Graphs
+Version: 1.2.0
+Date: 2015-10-22
+Authors@R: c(
+    person("Carl Tony", "Fakhry", email = "cfakhry@cs.umb.edu", role = c("cre","aut")),
+    person("Ping", "Chen", role = "ths"),
+    person("Kourosh", "Zarringhalam", role = c("aut","ths")))
+Description: QuaternaryProd is an R package that performs causal reasoning on biological 
+             networks, including publicly available networks such as String-db. QuaternaryProd 
+             is a free alternative to commercial products such as Quiagen and Inginuity pathway 
+             analysis. For a given a set of differentially expressed genes, QuaternaryProd 
+             computes the significance of upstream regulators in the network by performing causal
+             reasoning using the Quaternary Dot Product Scoring Statistic (Quaternary Statistic),
+             Ternary Dot product Scoring Statistic (Ternary Statistic) and Fisher's exact test. 
+             The Quaternary Statistic handles signed, unsigned and ambiguous edges in the network. 
+             Ambiguity arises when the direction of causality is unknown, or when the source node 
+             (e.g., a protein) has edges with conflicting signs for the same target gene. On the 
+             other hand, the Ternary Statistic provides causal reasoning using the signed and 
+             unambiguous edges only. The Vignette provides more details on the Quaternary Statistic 
+             and illustrates an example of how to perform causal reasoning using String-db. 
+License: GPL (>=3)
+biocViews: GraphAndNetwork, GeneExpression, Transcription
+Depends:
+    R (>= 3.2.0),
+    Rcpp (>= 0.11.3)
+Suggests:
+    readr,
+    org.Hs.eg.db,
+    dplyr,
+    stringr,
+    knitr,
+    fdrtool
+LinkingTo: Rcpp
+LazyData: true
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
