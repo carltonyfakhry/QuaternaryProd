@@ -75,8 +75,8 @@ pval <- QP_SigPvalue(score = 5, q_p = 20, q_m = 20, q_z = 20, q_r = 0,
 pval
 ```  
 
-If the user is only interested in obtaining statistically significant p-values, then *QP_SigPvalue* is optimized for this purpose. In either case, the user is advised to compute the p-value of a score using the previous two functions which will be faster than computing the entire probability mass function and then computing the p-value.
-Finally, it is possible to also compute the probabilities of scores individually using *QP_Probability* and the support of the distribution using *QP_Support*. 
+If the user is only interested in obtaining statistically significant p-values, then `QP_SigPvalue` is optimized for this purpose. In either case, the user is advised to compute the p-value of a score using the previous two functions which will be faster than computing the entire probability mass function and then computing the p-value.
+Finally, it is possible to also compute the probabilities of scores individually using `QP_Probability` and the support of the distribution using `QP_Support`. 
 Since this package is written to the benefit of bioinformaticians, we will provide an example on how to apply this statistic to a publicly available network.
 One bioinformatic application is to test how well protein-protein causal networks can predict the results in gene expression data. In the last section of this Vignette, we present an example of computing this statistic over the STRINGdb network and given gene expression data.   
   
@@ -85,7 +85,7 @@ One bioinformatic application is to test how well protein-protein causal network
 \(\indent\) \(\indent\) \(\indent\) \(\indent\) Here we provide functionality for using **QuaternaryProd** with the STRINGdb Homo Sapien causal network provided under the creative commons license. 
 
 ### Compute Pvalues Over the Network
-\indent  Given new gene expression data, we can compute the scores and p-values for all source nodes in the STRINGdb Homo Sapien causal network using the specialized *RunCRE_HSAStringDB* function.
+\indent  Given new gene expression data, we can compute the scores and p-values for all source nodes in the STRINGdb Homo Sapien causal network using the specialized `RunCRE_HSAStringDB` function.
 
 ```{r, message=FALSE}
 library(QuaternaryProd)
@@ -117,29 +117,29 @@ gene_expression_data3 <- gene_expression_data3[!duplicated(gene_expression_data3
 
 # Compute Quaternary Dot Product Scoring Statistic for all source nodes based
 # on new gene expression data. 
-CRE_results <- RunCRE_HSAStringDB(gene_expression_data1, method = "Quaternary",
+CRE_results <- RunCRE_HSAStringDB(gene_expression_data1, method = "Enrichment",
                                    fc.thresh = log2(1.3), pval.thresh = 0.05)
 # Get FDR corrected p-values
 CRE_results["qvalue"] <- p.adjust(CRE_results$pvalue, method = "fdr")
-CRE_results[1:400, c("uid","name","regulation","pvalue","qvalue")]
+# CRE_results[1:400, c("uid","name","regulation","pvalue","qvalue")]
 
 
-CRE_results2 <- RunCRE_HSAStringDB(gene_expression_data2, method = "Quaternary",
+CRE_results2 <- RunCRE_HSAStringDB(gene_expression_data2, method = "Enrichment",
                                    fc.thresh = log2(1.3), pval.thresh = 0.05)
 # Get FDR corrected p-values
 CRE_results2["qvalue"] <- p.adjust(CRE_results2$pvalue, method = "fdr")
-CRE_results2[1:400, c("uid","name","regulation","pvalue","qvalue")]
+# CRE_results2[1:400, c("uid","name","regulation","pvalue","qvalue")]
 
 
-CRE_results3 <- RunCRE_HSAStringDB(gene_expression_data3, method = "Quaternary",
+CRE_results3 <- RunCRE_HSAStringDB(gene_expression_data3, method = "Enrichment",
                                    fc.thresh = log2(1.3), pval.thresh = 0.05)
 # Get FDR corrected p-values
 CRE_results3["qvalue"] <- p.adjust(CRE_results3$pvalue, method = "fdr")
-CRE_results3[1:400, c("uid","name","regulation","pvalue","qvalue")]
+# CRE_results3[1:400, c("uid","name","regulation","pvalue","qvalue")]
 
 ```
 
-*RunCRE_HSAStringDB* returns a data frame containing all the source nodes of the String causal network, all of which had their respective scores and p-values computed. The source nodes are ordered in increasing order of the p-values (Note: details on the columns of the data frame returned can be found in the help page for *RunCRE_HSAStringDB*).
+`RunCRE_HSAStringDB` returns a data frame containing all the source nodes of the String causal network, all of which had their respective scores and p-values computed. The source nodes are ordered in increasing order of the p-values (Note: details on the columns of the data frame returned can be found in the help page for `RunCRE_HSAStringDB`).
 
 ## References
 
