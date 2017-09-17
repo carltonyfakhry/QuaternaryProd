@@ -8,7 +8,7 @@ library(devtools)
 install_github("carltonyfakhry/QuaternaryProd", build_vignettes = TRUE, local = FALSE)
 ```
 ## Usage
-For an introduction to the Quaternary Dot Product Scoring Statistic and for an example on how to compute it over the publicly available network *Stringdb*, please see 
+For an introduction to the Quaternary Dot Product Scoring Statistic and for an example on how to compute it over the publicly available network *STRINGdb*, please see 
 the *Vignette* for this package using the following:
 ```{R}
 browseVignettes("QuaternaryProd")

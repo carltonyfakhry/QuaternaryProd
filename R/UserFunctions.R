@@ -44,9 +44,9 @@ QP_Support <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z){
     stop("All constraints must be integers!\n")
   }
   
-  # All constraints must be positive.
+  # All constraints must be non-negative.
   if (q_p < 0 || q_m < 0 || q_r < 0 || q_z < 0 || n_p < 0 || n_m < 0 || n_z < 0){
-    stop("All constraints must be positive!\n")
+    stop("All constraints must be non-negative!\n")
   }
   
   # Sum of row constraints must equal sum of column constraints.
@@ -132,9 +132,9 @@ QP_Pmf <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16){
     stop("All constraints must be integers!\n")
   }
   
-  # All constraints must be positive.
+  # All constraints must be non-negative.
   if (q_p < 0 || q_m < 0 || q_r < 0 || q_z < 0 || n_p < 0 || n_m < 0 || n_z < 0){
-    stop("All constraints must be positive!\n")
+    stop("All constraints must be non-negative!\n")
   }
   
   # Epsilon must be positive between 0 and 1.
@@ -219,9 +219,9 @@ QP_Pvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)
     stop("All constraints must be integers!\n")
   }
   
-  # All constraints must be positive.
+  # All constraints must be non-negative.
   if (q_p < 0 || q_m < 0 || q_r < 0 || q_z < 0 || n_p < 0 || n_m < 0 || n_z < 0){
-    stop("All constraints must be positive!\n")
+    stop("All constraints must be non-negative!\n")
   }
   
   # Epsilon must be positive between 0 and 1.
@@ -310,9 +310,9 @@ QP_SigPvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-
     stop("All constraints must be integers!\n")
   }
   
-  # All constraints must be positive.
+  # All constraints must be non-negative.
   if (q_p < 0 || q_m < 0 || q_r < 0 || q_z < 0 || n_p < 0 || n_m < 0 || n_z < 0){
-    stop("All constraints must be positive!\n")
+    stop("All constraints must be non-negative!\n")
   }
   
   # Epsilon must be positive between 0 and 1.
@@ -400,9 +400,9 @@ QP_Probability <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1
     stop("All constraints must be integers!\n")
   }
   
-  # All constraints must be positive.
+  # All constraints must be non-negative.
   if (q_p < 0 || q_m < 0 || q_r < 0 || q_z < 0 || n_p < 0 || n_m < 0 || n_z < 0){
-    stop("All constraints must be positive!\n")
+    stop("All constraints must be non-negative!\n")
   }
   
   # Epsilon must be positive between 0 and 1.

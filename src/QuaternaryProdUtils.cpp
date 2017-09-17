@@ -546,7 +546,7 @@ IntegerVector get_mat_of_score_4by3(IntegerVector constraints, int score_target,
 
 /**
  * 
- * This function computes a very accurate estimate of the 
+ * This function computes a very accurate estimate of the array with the
  * largest D-value.
  *
  */

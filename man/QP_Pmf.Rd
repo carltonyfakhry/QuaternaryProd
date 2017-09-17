@@ -48,9 +48,6 @@ This function computes the probability for each score in the support of the dist
 pmf <- QP_Pmf(50,50,50,0,50,50,50)
 
 }
-\author{
-Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
-}
 \references{
 Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and
             Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and
@@ -64,4 +61,6 @@ Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Dani
 \seealso{
 \code{\link{QP_Pvalue}}, \code{\link{QP_Support}}
 }
-
+\author{
+Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
+}

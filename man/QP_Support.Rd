@@ -33,9 +33,6 @@ for signed causal graphs. This includes all scores which have probabilities stri
 QP_Support(50,50,50,0,50,50,50)
 
 }
-\author{
-Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
-}
 \references{
 Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and
             Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and
@@ -46,4 +43,6 @@ Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Dani
             and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. 
             Epub 2012 Nov 29'.
 }
-
+\author{
+Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
+}
