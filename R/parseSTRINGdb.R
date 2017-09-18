@@ -6,7 +6,7 @@ library(readr)
 parseStringDB <- function(){
 
   # Get the full file name containing the STRINGdb Rels
-  ff <- system.file("extdata", "9606.protein.actions.v10.5.txt.gz", package="QuaternaryProd")
+  ff <- system.file("extdata", "9606.protein.actions.v10.txt.gz", package="QuaternaryProd")
   all_rels <- read_tsv(gzfile(ff), col_names = TRUE)
 
   # Set new names for columns
@@ -36,7 +36,7 @@ parseStringDB <- function(){
 
   # Get the entities data frame
   ff2 <- system.file("extdata", "ENSPid_to_Entrezid_v10.csv", package="QuaternaryProd")
-  Ensemble2Entrez = read.table(ff2, header = T, stringsAsFactors = F)
+  Ensemble2Entrez = read.table(ff2, sep = ",", header = T, stringsAsFactors = F)
 
   Ents <- data.frame(id = Ensemble2Entrez$Entrez_Gene_ID, ensembleid = Ensemble2Entrez$STRING_Locus_ID, stringsAsFactors = F)
   map = org.Hs.egSYMBOL
@@ -62,7 +62,7 @@ parseStringDB <- function(){
   Ents <- rbind(Ents, Ents2)
   Ents$id[duplicated(Ents$id)] <- "No-EntrezId"
   Ents$symbol[duplicated(Ents$symbol)] <- "No-Symbol"
-  
+
   allEns2 <- allEns[which(!(allEns %in% Ents$ensembleid))]
   Ents2 <- data.frame(id = "No-EntrezId", ensembleid = allEns2, symbol = "No-Symbol")
   Ents <- rbind(Ents, Ents2)
@@ -70,10 +70,8 @@ parseStringDB <- function(){
   Ents <- Ents[!duplicated(Ents$ensembleid),]
   
   # Get all unique Rels
-  Rels <- Rels[!(Rels$srcuid %in% allEns2),]
+  Rels <- Rels[!(Rels$trguid %in% allEns2),]
   Rels <- Rels[which(Rels$srcuid %in% Ents$ensembleid & Rels$trguid %in% Ents$ensembleid),]
-  Rels <- Rels[which(Rels$srcuid %in% Ents$ensembleid),]
-  Rels <- Rels[which(Rels$trguid %in% Ents$ensembleid),]
   Rels2 <- left_join(Rels, Ents, by = c("srcuid" = "ensembleid")) %>% dplyr::select(srcuid = uid, trguid, mode)
   Rels2 <- left_join(Rels2, Ents, by = c("trguid" = "ensembleid")) %>% dplyr::select(srcuid, trguid = uid, mode)
   Rels <- data.frame(Rels2)
@@ -92,13 +90,21 @@ parseStringDB <- function(){
   Rels <- Rels[order(Rels$srcuid, Rels$trguid),]
 
   # Handle ambiguities if source node affects target node in more than one way
-  Rels <- Rels[!duplicated(Rels),]
   temp.rels <- Rels[which(Rels$mode %in% c(1,-1)),]
   temp.rels <- temp.rels[,c("srcuid","trguid")]
   indices1 <- which(duplicated(temp.rels))
-  indices2 <- which(duplicated(temp.rels, fromLast=TRUE))
-  indices <- unique(c(indices1, indices2))
-  Rels[indices,3] <- 0
+  for(i in indices1){
+    indices2 <- which(Rels$srcuid == temp.rels$srcuid[i] & Rels$trguid == temp.rels$trguid[i])
+    if(all(c(-1,1) %in% unique(Rels$mode[indices2]))){
+      Rels$mode[indices2] = 0
+    }else if(1 %in% unique(Rels$mode[indices2])){
+      Rels$mode[indices2] = 1
+    }else if(-1 %in% unique(Rels$mode[indices2])){
+      Rels$mode[indices2] = -1
+    }else{
+      Rels$mode[indices2] = 0
+    }
+  }
   Rels <- Rels[!duplicated(Rels),]
   Rels <- Rels[which(Rels$srcuid != Rels$trguid),]
 

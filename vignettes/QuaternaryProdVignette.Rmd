@@ -82,13 +82,14 @@ One bioinformatic application is to test how well protein-protein causal network
   
 ## Functionality for working with the Homo sapien causal network from STRINGdb
 
-\(\indent\) \(\indent\) \(\indent\) \(\indent\) Here we provide functionality for using **QuaternaryProd** with the STRINGdb Homo Sapien causal network provided under the creative commons license. 
+\(\indent\) \(\indent\) \(\indent\) \(\indent\) Here we provide functionality for using **QuaternaryProd** with the STRINGdb Homo Sapien causal network version 10.5 provided under the creative commons license. 
 
 ### Compute Pvalues Over the Network
-\indent  Given new gene expression data, we can compute the scores and p-values for all source nodes in the STRINGdb Homo Sapien causal network using the specialized `RunCRE_HSAStringDB` function.
+\indent  Given new gene expression data, we can compute the scores and p-values for all source nodes in the STRINGdb Homo Sapien causal network using the specialized `RunCRE_HSAStringDB` function. We use the gene expression datasets that were used in [1]. The datasets contain the c-Myc, H-Ras and E2F3 expression signatures.
 
 ```{r, message=FALSE}
 library(QuaternaryProd)
+library(fdrtool)
 
 # Gene expression data
 gene_expression_data1 <- system.file("extdata", "e2f3_sig.txt",
@@ -117,25 +118,24 @@ gene_expression_data3 <- gene_expression_data3[!duplicated(gene_expression_data3
 
 # Compute Quaternary Dot Product Scoring Statistic for all source nodes based
 # on new gene expression data. 
-CRE_results <- RunCRE_HSAStringDB(gene_expression_data1, method = "Enrichment",
+CRE_results <- RunCRE_HSAStringDB(gene_expression_data1, method = "Quaternary",
                                    fc.thresh = log2(1.3), pval.thresh = 0.05)
 # Get FDR corrected p-values
 CRE_results["qvalue"] <- p.adjust(CRE_results$pvalue, method = "fdr")
-# CRE_results[1:400, c("uid","name","regulation","pvalue","qvalue")]
+CRE_results[1:8, c("uid","symbol","regulation","pvalue","qvalue")]
+
+# CRE_results2 <- RunCRE_HSAStringDB(gene_expression_data2, method = "Ternary",
+#                                    fc.thresh = log2(1.3), pval.thresh = 0.05)
+# # Get FDR corrected p-values
+# CRE_results2["qvalue"] <- p.adjust(CRE_results2$pvalue, method = "fdr")
+# CRE_results2[1:400, c("uid","symbol","regulation","pvalue","qvalue")]
 
 
-CRE_results2 <- RunCRE_HSAStringDB(gene_expression_data2, method = "Enrichment",
-                                   fc.thresh = log2(1.3), pval.thresh = 0.05)
-# Get FDR corrected p-values
-CRE_results2["qvalue"] <- p.adjust(CRE_results2$pvalue, method = "fdr")
-# CRE_results2[1:400, c("uid","name","regulation","pvalue","qvalue")]
-
-
-CRE_results3 <- RunCRE_HSAStringDB(gene_expression_data3, method = "Enrichment",
-                                   fc.thresh = log2(1.3), pval.thresh = 0.05)
-# Get FDR corrected p-values
-CRE_results3["qvalue"] <- p.adjust(CRE_results3$pvalue, method = "fdr")
-# CRE_results3[1:400, c("uid","name","regulation","pvalue","qvalue")]
+# CRE_results3 <- RunCRE_HSAStringDB(gene_expression_data3, method = "Quaternary",
+#                                    fc.thresh = log2(1.3), pval.thresh = 0.05)
+# # Get FDR corrected p-values
+# CRE_results3["qvalue"] <- p.adjust(CRE_results3$pvalue, method = "fdr")
+# CRE_results3[1:400, c("uid","symbol","regulation","pvalue","qvalue")]
 
 ```
 

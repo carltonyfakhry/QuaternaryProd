@@ -41,7 +41,7 @@ getGeneVals <- function(trguids, gene_expression_data){
 #'         
 #' \itemize{        
 #' \item  \code{uid} The source node in the STRINGdb network.
-#' \item \code{name} Symbol of the source node. 
+#' \item \code{symbol} Symbol of the source node. 
 #' \item \code{regulation} Direction of change of source node.
 #' \item \code{correct.pred} Number of correct predictions in \code{gene_expression_data} when compared to predictions made
 #'                     by the network.
@@ -238,7 +238,7 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", fc.t
                           gene_expression_data = gene_expression_data, unique.children = unique.children)
   
   results <- data.frame(matrix(0, nrow  = 2 * length(u.hyps), ncol = 12), stringsAsFactors = F)
-  colnames(results) <- c('uid', 'name', 'regulation', 'correct.pred', 'incorrect.pred', 'score',
+  colnames(results) <- c('uid', 'symbol', 'regulation', 'correct.pred', 'incorrect.pred', 'score',
                         'total.reachable', 'significant.reachable', 'total.ambiguous', 'significant.ambiguous',
                         'unknown', 'pvalue')
   
