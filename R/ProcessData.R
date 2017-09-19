@@ -22,7 +22,8 @@ getGeneVals <- function(trguids, gene_expression_data){
 #'              Sapien STRINGdb causal network.
 #' 
 #' @usage RunCRE_HSAStringDB(gene_expression_data, method = "Quaternary", 
-#'                     fc.thresh = log2(1.3), pval.thresh = 0.05) 
+#'                     fc.thresh = log2(1.3), pval.thresh = 0.05, 
+#'                     only.significant.pvalues = FALSE, significance.level = 0.05) 
 #' 
 #' @param gene_expression_data A data frame for gene expression data. The \code{gene_expression_data} data frame must have three columns \code{entrez}, 
 #'        \code{fc} and \code{pvalue}. \code{entrez} denotes the entrez id of a given gene, \code{fc} denotes
@@ -33,29 +34,33 @@ getGeneVals <- function(trguids, gene_expression_data){
 #'        smaller than \code{fc.thresh} will be ignored. Default value is \code{fc.thresh = log2(1.3)}. 
 #' @param pval.thresh Threshold for p-values in \code{gene_expression_data} data frame. All rows in \code{gene_expression_data} with p-values 
 #'        greater than \code{pval.thresh} will be ingnored. Default value is \code{pval.thresh = 0.05}. 
-#'        
+#' @param only.significant.pvalues If \code{only.significant.pvalues = TRUE} then only p-values for statistically significant regulators
+#'        are computed otherwise uncomputed p-values are set to -1. The default value is \code{only.significant.pvalues = FALSE}.
+#' @param significance.level When \code{only.significant.pvalues = TRUE}, only p-values which are less than or equal to 
+#'                           \code{significance.level} are computed. The default value is \code{significance.level = 0.05}.
+#'           
 #' @return This function returns a data frame containing parameters concerning the method used. The p-values of each
-#'         of the source nodes is also computed, and the data frame
-#'         is in increasing order of p-values of the goodness of fit score for the given source nodes. The column
+#'         of the regulators is also computed, and the data frame
+#'         is in increasing order of p-values of the goodness of fit score for the given regulators. The column
 #'         names of the data frame are:
 #'         
 #' \itemize{        
-#' \item  \code{uid} The source node in the STRINGdb network.
-#' \item \code{symbol} Symbol of the source node. 
-#' \item \code{regulation} Direction of change of source node.
+#' \item  \code{uid} The regulator in the STRINGdb network.
+#' \item \code{symbol} Symbol of the regulator. 
+#' \item \code{regulation} Direction of regulation of regulator.
 #' \item \code{correct.pred} Number of correct predictions in \code{gene_expression_data} when compared to predictions made
 #'                     by the network.
 #' \item \code{incorrect.pred} Number of incorrect predictions in \code{gene_expression_data} when compared to predictions made
 #'                     by the network.
 #' \item \code{score} The number of correct predictions minus the number of incorrect predictions. 
-#' \item \code{total.reachable} Total Number of children of the given source node.
-#' \item \code{significant.reachable} Number of children of the given source node that are also present 
+#' \item \code{total.reachable} Total Number of children of the given regulator.
+#' \item \code{significant.reachable} Number of children of the given regulator that are also present 
 #'                                    in \code{gene_expression_data}.
-#' \item \code{total.ambiguous} Total number of children of the given source node which are regulated by the given source node without
+#' \item \code{total.ambiguous} Total number of children of the given regulator which are regulated by the given regulator without
 #'                              knowing the direction of regulation.
-#' \item \code{significant.ambiguous} Total number of children of the given source node which are regulated by the given source node without
+#' \item \code{significant.ambiguous} Total number of children of the given regulator which are regulated by the given regulator without
 #'                              knowing the direction of regulation and are also present in \code{gene_expression_data}.  
-#' \item \code{unknown} Number of target nodes in the STRINGdb causal network which do not interact with the given source node.
+#' \item \code{unknown} Number of target nodes in the STRINGdb causal network which do not interact with the given regulator.
 #' \item \code{pvalue} P-value of the score computed according to the selected method.
 #' }
 #' 
@@ -81,13 +86,16 @@ getGeneVals <- function(trguids, gene_expression_data){
 #' gene_expression_data1 <- gene_expression_data1[!duplicated(gene_expression_data1$entrez),]
 #' names(gene_expression_data1) <- c("entrez", "pvalue", "fc")
 #'           
-#' # Compute the statistic for each source node in the String network
+#' # Compute the statistic for each regulator in the String network
 #' results <- RunCRE_HSAStringDB(gene_expression_data1, method = "Quaternary",
 #'                               fc.thresh = log2(1.3), pval.thresh = 0.05)
 #'
 #' @export
 
-RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", fc.thresh = log2(1.3), pval.thresh = 0.05){
+RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", 
+                               fc.thresh = log2(1.3), pval.thresh = 0.05,
+                               only.significant.pvalues = FALSE,
+                               significance.level = 0.05){
   
   f1 <- system.file("extdata", "newStringRels.dat", package="QuaternaryProd")
   relations <- read.table(f1, header = T, stringsAsFactors = F)
@@ -111,6 +119,16 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", fc.t
   # Check pval.thresh
   if(length(pval.thresh) != 1 || !is.numeric(pval.thresh) | pval.thresh > 1 | pval.thresh < 0){
     stop("pval.thresh should be a numeric value >= 0 and <= 1!")
+  }
+  
+  # Check only.significant.pvalues
+  if(length(only.significant.pvalues) != 1 | !is.logical(only.significant.pvalues)){
+    stop("only.significant.pvalues must be set to either TRUE or FALSE!")
+  }
+  
+  # Check significance.level
+  if(length(significance.level) != 1 || !is.numeric(significance.level) | significance.level > 1 | significance.level < 0){
+    stop("significance.level should be a numeric value >= 0 and <= 1!")
   }
   
   if (!is.data.frame(gene_expression_data)){ 
@@ -244,14 +262,11 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", fc.t
   
   
   for(p.s in 1:length(u.hyps)){
+
     results[(2*(p.s-1)+1), 1] <- entities$ensembleid[which(entities$uid == u.hyps[p.s])]
     results[(2*p.s), 1]       <- entities$ensembleid[which(entities$uid == u.hyps[p.s])]
     results[(2*(p.s-1)+1), 2] <- entities$symbol[which(entities$uid == u.hyps[p.s])]
     results[(2*p.s), 2]       <- entities$symbol[which(entities$uid == u.hyps[p.s])]
-    # results[(2*(p.s-1)+1), 1] <- u.hyps[p.s]
-    # results[(2*p.s), 1]       <- u.hyps[p.s]
-    # results[(2*(p.s-1)+1), 2] <- entities$name[which(entities$uid == u.hyps[p.s])]
-    # results[(2*p.s), 2]       <- entities$name[which(entities$uid == u.hyps[p.s])]
     results[(2*(p.s-1)+1), 3] <- 'up'
     results[(2*p.s), 3]       <- 'down'
     
@@ -272,11 +287,14 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", fc.t
     nzz = length(which(non.child.val[[p.s]] == 0))
     
     if (method == "Quaternary"){
-      pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Quaternary')
+      pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Quaternary',
+                     only.significant.pvalues = only.significant.pvalues, significance.level = significance.level)
     } else if (method == "Ternary"){
-      pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Ternary')
+      pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Ternary',
+                     only.significant.pvalues = only.significant.pvalues, significance.level = significance.level)
     } else if (method == "Enrichment"){
-      pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Enrichment')
+      pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Enrichment',
+                     only.significant.pvalues = only.significant.pvalues, significance.level = significance.level)
     } else {
       stop("Select one of methods: Quaternary, Ternary or Enrichment")
     }
@@ -307,8 +325,10 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", fc.t
     results[(2*p.s), 12] <- pval$pval.down
   }
   
-  
-  results <- results[order(results$pvalue), ]
+  results.tmp1 <- results[which(results$pvalue > -1),]
+  results.tmp1 <- results.tmp1[order(results.tmp1$pvalue),]
+  results.tmp2 <- results[which(results$pvalue == -1),]
+  results <- rbind(results.tmp1, results.tmp2)
   rownames(results) <- 1:nrow(results)
   
   return(results)
@@ -318,7 +338,7 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", fc.t
 
 
 # This function runs the CRE based on the version specified
-runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method){
+runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method, only.significant.pvalues, significance.level){
   
   if(method == 'Quaternary'){
     
@@ -332,15 +352,27 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
     qPlus  <- npp + npm + npz
     qMinus <- nmp + nmm + nmz
     score  <- npp + nmm + nrp + nrm - (npm + nmp)
-    pval.up <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+    pval.up <- NULL
+    if(only.significant.pvalues){
+      pval.up <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+    }else{
+      pval.up <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+    }
     
     ## Assume down-regulated
     qPlus  <- nmp + nmm + nmz
     qMinus <- npp + npm + npz
     score  <- nmp + npm + nrp + nrm - (npp + nmm)
-    pval.down <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                            q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+    pval.down <- NULL
+    if(only.significant.pvalues){
+      pval.down <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+                            q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+    }else{
+      pval.down <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+                             q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+    }
     
   } else if(method == 'Ternary'){
     qR     <- 0
@@ -353,15 +385,27 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
     qPlus  <- npp + npm + npz
     qMinus <- nmp + nmm + nmz
     score  <- npp + nmm - (npm + nmp)
-    pval.up <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                          q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+    pval.up <- NULL
+    if(only.significant.pvalues){
+      pval.up <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+                              q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+    }else{
+      pval.up <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+    }
     
     ## Assume down-regulated
     qPlus  <- nmp + nmm + nmz
     qMinus <- npp + npm + npz
     score  <- nmp + npm - (npp + nmm)
-    pval.down <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                            q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+    pval.down <- NULL
+    if(only.significant.pvalues){
+      pval.down <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+                                q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+    }else{
+      pval.down <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+                             q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+    }
     
     
   } else if(method == 'Enrichment'){
@@ -381,8 +425,14 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
     
     score  <- nrp + nrm
     
-    pval.up <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                          q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+    if(only.significant.pvalues){
+      pval.up <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+                              q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+    }else{
+      pval.up <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
+                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+    }
+    
     pval.down <- pval.up
     
   }
