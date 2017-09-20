@@ -47,7 +47,7 @@ getGeneVals <- function(trguids, gene_expression_data){
 #' \itemize{        
 #' \item  \code{uid} The regulator in the STRINGdb network.
 #' \item \code{symbol} Symbol of the regulator. 
-#' \item \code{regulation} Direction of regulation of regulator.
+#' \item \code{regulation} Direction of regulation of the regulator.
 #' \item \code{correct.pred} Number of correct predictions in \code{gene_expression_data} when compared to predictions made
 #'                     by the network.
 #' \item \code{incorrect.pred} Number of incorrect predictions in \code{gene_expression_data} when compared to predictions made
@@ -78,17 +78,21 @@ getGeneVals <- function(trguids, gene_expression_data){
 #' @examples 
 #'
 #' # Get gene expression data
-#' gene_expression_data1 <- system.file("extdata", "e2f3_sig.txt", package = "QuaternaryProd")
-#' gene_expression_data1 <- read.table(gene_expression_data1, sep = "\t", header = TRUE
-#'                                                   , stringsAsFactors = FALSE)
-#'
-#' # Remove duplicated entrez ids in gene_expression_data1 and rename column names appropriately
-#' gene_expression_data1 <- gene_expression_data1[!duplicated(gene_expression_data1$entrez),]
-#' names(gene_expression_data1) <- c("entrez", "pvalue", "fc")
-#'           
-#' # Compute the statistic for each regulator in the String network
-#' results <- RunCRE_HSAStringDB(gene_expression_data1, method = "Quaternary",
-#'                               fc.thresh = log2(1.3), pval.thresh = 0.05)
+#' e2f3 <- system.file("extdata", "e2f3_sig.txt", package = "QuaternaryProd")
+#' e2f3 <- read.table(e2f3, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+#' 
+#' # Rename column names appropriately and remove duplicated entrez ids
+#' names(e2f3) <- c("entrez", "pvalue", "fc")
+#' e2f3 <- e2f3[!duplicated(e2f3$entrez),]
+#' 
+#' # Compute the Quaternary Dot Product Scoring statistic for statistically significant
+#' # regulators in the STRINGdb network
+#' quaternary_results <- RunCRE_HSAStringDB(e2f3, method = "Quaternary",
+#'                              fc.thresh = log2(1.3), pval.thresh = 0.05,
+#'                              only.significant.pvalues = TRUE)
+#' # Get FDR corrected p-values
+#' quaternary_results["qvalue"] <- p.adjust(quaternary_results$pvalue, method = "fdr")
+#' quaternary_results[1:4, c("uid","symbol","regulation","pvalue","qvalue")]
 #'
 #' @export
 
@@ -97,14 +101,10 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
                                only.significant.pvalues = FALSE,
                                significance.level = 0.05){
   
-  f1 <- system.file("extdata", "newStringRels.dat", package="QuaternaryProd")
+  f1 <- system.file("extdata", "StringRels.dat", package="QuaternaryProd")
   relations <- read.table(f1, header = T, stringsAsFactors = F)
-  f2 <- system.file("extdata", "newStringEnts.dat", package="QuaternaryProd")
+  f2 <- system.file("extdata", "StringEnts.dat", package="QuaternaryProd")
   entities <- read.table(f2, header = T, stringsAsFactors = F)
-  # f1 <- system.file("extdata", "StringRels.dat", package="QuaternaryProd") 
-  # relations <- read.table(f1, header = T, stringsAsFactors = F)
-  # f2 <- system.file("extdata", "StringEnts.dat", package="QuaternaryProd") 
-  # entities <- read.table(f2, header = T, stringsAsFactors = F)
   
   # Check method
   if(!(method %in% c("Quaternary", "Ternary", "Enrichment"))){
@@ -180,7 +180,7 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
       gene_expression_data[,"entrez"] <- as.integer(gene_expression_data[,"entrez"])
     }else if(is.integer(gene_expression_data[,"entrez"])){
     }else{
-      stop("In gene_expression_data, column entrez must be of type character or integer!")
+      stop("In gene_expression_data, column entrez must be of type character or integer (but not a factor)!")
     }
     
     if(!is.numeric(gene_expression_data[,"fc"])){
@@ -238,12 +238,9 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
   gene_expression_data.tmp <- merge(gene_expression_data, entities, by.x = "entrez" , by.y = "id")
   gene_expression_data <- data.frame(uid = gene_expression_data.tmp[,"uid"], val = gene_expression_data.tmp[,"val"], stringsAsFactors = F)
     
-  # u.hyps <- list.load(system.file("extdata", "u.hyps.yaml", package="QuaternaryProd"))
-  # child.uid <- list.load(system.file("extdata", "child.uid.yaml", package="QuaternaryProd"))
-  # child.sgn <- list.load(system.file("extdata", "child.sgn.yaml", package="QuaternaryProd"))
-  u.hyps <- list.load(system.file("extdata", "new.u.hyps.yaml", package="QuaternaryProd"))
-  child.uid <- list.load(system.file("extdata", "new.child.uid.yaml", package="QuaternaryProd"))
-  child.sgn <- list.load(system.file("extdata", "new.child.sgn.yaml", package="QuaternaryProd"))
+  u.hyps <- list.load(system.file("extdata", "u.hyps.yaml", package="QuaternaryProd"))
+  child.uid <- list.load(system.file("extdata", "child.uid.yaml", package="QuaternaryProd"))
+  child.sgn <- list.load(system.file("extdata", "child.sgn.yaml", package="QuaternaryProd"))
   
   # Get the value of regulation of the children from the gene expression data
   child.val <- lapply(child.uid, function(x, gene_expression_data) 

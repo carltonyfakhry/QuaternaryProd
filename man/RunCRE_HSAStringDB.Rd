@@ -7,46 +7,53 @@ Product Scoring Statistic, Ternary Dot Product Scoring Statistic or the Enrichme
 Sapien STRINGdb causal network.}
 \usage{
 RunCRE_HSAStringDB(gene_expression_data, method = "Quaternary", 
-                    fc.thresh = 1.3, pval.thresh = 0.05)
+                    fc.thresh = log2(1.3), pval.thresh = 0.05, 
+                    only.significant.pvalues = FALSE, significance.level = 0.05)
 }
 \arguments{
-\item{gene_expression_data}{A data frame for gene expression data. The \emph{gene_expression_data} data frame must have three columns \emph{entrez}, 
-\emph{fc} and \emph{pvalue}. \emph{entrez} denotes the entrez id of a given gene, \emph{fc} denotes
-the fold change of a gene, and \emph{pvalue} denotes the p-value. The \emph{entrez} column must be of type
-integer or character, and the \emph{fc} and \emph{pvalue} columns must be numeric values.}
+\item{gene_expression_data}{A data frame for gene expression data. The \code{gene_expression_data} data frame must have three columns \code{entrez}, 
+\code{fc} and \code{pvalue}. \code{entrez} denotes the entrez id of a given gene, \code{fc} denotes
+the fold change of a gene, and \code{pvalue} denotes the p-value. The \code{entrez} column must be of type
+integer or character, and the \code{fc} and \code{pvalue} columns must be numeric values.}
 
-\item{method}{Choose one of \emph{Quaternary}, \emph{Ternary} or \emph{Enrichment}. Default is \emph{Quaternary}.}
+\item{method}{Choose one of \code{Quaternary}, \code{Ternary} or \code{Enrichment}. Default is \code{Quaternary}.}
 
-\item{fc.thresh}{Threshold for fold change in \emph{gene_expression_data} data frame. Any row in gene_expression_data with abosolute value of \emph{fc}
-smaller than \emph{fc.thresh} will be ignored. Default value is 1.3.}
+\item{fc.thresh}{Threshold for fold change in \code{gene_expression_data} data frame. Any row in gene_expression_data with abosolute value of \code{fc}
+smaller than \code{fc.thresh} will be ignored. Default value is \code{fc.thresh = log2(1.3)}.}
 
-\item{pval.thresh}{Threshold for p-values in \emph{gene_expression_data} data frame. All rows in \emph{gene_expression_data} with p-values 
-greater than \emph{pval.thresh} will be ingnored. Default value is 0.05.}
+\item{pval.thresh}{Threshold for p-values in \code{gene_expression_data} data frame. All rows in \code{gene_expression_data} with p-values 
+greater than \code{pval.thresh} will be ingnored. Default value is \code{pval.thresh = 0.05}.}
+
+\item{only.significant.pvalues}{If \code{only.significant.pvalues = TRUE} then only p-values for statistically significant regulators
+are computed otherwise uncomputed p-values are set to -1. The default value is \code{only.significant.pvalues = FALSE}.}
+
+\item{significance.level}{When \code{only.significant.pvalues = TRUE}, only p-values which are less than or equal to 
+\code{significance.level} are computed. The default value is \code{significance.level = 0.05}.}
 }
 \value{
 This function returns a data frame containing parameters concerning the method used. The p-values of each
-        of the source nodes is also computed, and the data frame
-        is in increasing order of p-values of the goodness of fit score for the given source nodes. The column
+        of the regulators is also computed, and the data frame
+        is in increasing order of p-values of the goodness of fit score for the given regulators. The column
         names of the data frame are:
         
 \itemize{        
-\item  \emph{uid} The source node in the STRINGdb network.
-\item \emph{name} Symbol of the source node. 
-\item \emph{regulation} Direction of change of source node.
-\item \emph{correct.pred} Number of correct predictions in \emph{gene_expression_data} when compared to predictions made
+\item  \code{uid} The regulator in the STRINGdb network.
+\item \code{symbol} Symbol of the regulator. 
+\item \code{regulation} Direction of regulation of the regulator.
+\item \code{correct.pred} Number of correct predictions in \code{gene_expression_data} when compared to predictions made
                     by the network.
-\item \emph{incorrect.pred} Number of incorrect predictions in \emph{gene_expression_data} when compared to predictions made
+\item \code{incorrect.pred} Number of incorrect predictions in \code{gene_expression_data} when compared to predictions made
                     by the network.
-\item \emph{score} The number of correct predictions minus the number of incorrect predictions. 
-\item \emph{total.reachable} Total Number of children of the given source node.
-\item \emph{significant.reachable} Number of children of the given source node that are also present 
-                                   in \emph{gene_expression_data}.
-\item \emph{total.ambiguous} Total number of children of the given source node which are regulated by the given source node without
+\item \code{score} The number of correct predictions minus the number of incorrect predictions. 
+\item \code{total.reachable} Total Number of children of the given regulator.
+\item \code{significant.reachable} Number of children of the given regulator that are also present 
+                                   in \code{gene_expression_data}.
+\item \code{total.ambiguous} Total number of children of the given regulator which are regulated by the given regulator without
                              knowing the direction of regulation.
-\item \emph{significant.ambiguous} Total number of children of the given source node which are regulated by the given source node without
-                             knowing the direction of regulation and are also present in \emph{gene_expression_data}.  
-\item \emph{unknown} Number of target nodes in the STRINGdb causal network which do not interact with the given source node.
-\item \emph{pvalue} P-value of the score computed according to the selected method.
+\item \code{significant.ambiguous} Total number of children of the given regulator which are regulated by the given regulator without
+                             knowing the direction of regulation and are also present in \code{gene_expression_data}.  
+\item \code{unknown} Number of target nodes in the STRINGdb causal network which do not interact with the given regulator.
+\item \code{pvalue} P-value of the score computed according to the selected method.
 }
 }
 \description{
@@ -57,16 +64,21 @@ This function runs a causal relation engine by computing the Quaternary Dot
 \examples{
 
 # Get gene expression data
-gene_expression_data1 <- system.file("extdata", "e2f3_sig.txt", package = "QuaternaryProd")
-gene_expression_data1 <- read.table(gene_expression_data1, sep = "\\t", header = TRUE
-                                                  , stringsAsFactors = FALSE)
+e2f3 <- system.file("extdata", "e2f3_sig.txt", package = "QuaternaryProd")
+e2f3 <- read.table(e2f3, sep = "\\t", header = TRUE, stringsAsFactors = FALSE)
 
-# Remove duplicated entrez ids in gene_expression_data1 and rename column names appropriately
-gene_expression_data1 <- gene_expression_data1[!duplicated(gene_expression_data1$entrez),]
-names(gene_expression_data1) <- c("entrez", "pvalue", "fc")
-          
-# Compute the statistic for each source node in the String network
-results <- RunCRE_HSAStringDB(gene_expression_data1)
+# Rename column names appropriately and remove duplicated entrez ids
+names(e2f3) <- c("entrez", "pvalue", "fc")
+e2f3 <- e2f3[!duplicated(e2f3$entrez),]
+
+# Compute the Quaternary Dot Product Scoring statistic for statistically significant
+# regulators in the STRINGdb network
+quaternary_results <- RunCRE_HSAStringDB(e2f3, method = "Quaternary",
+                             fc.thresh = log2(1.3), pval.thresh = 0.05,
+                             only.significant.pvalues = TRUE)
+# Get FDR corrected p-values
+quaternary_results["qvalue"] <- p.adjust(quaternary_results$pvalue, method = "fdr")
+quaternary_results[1:4, c("uid","symbol","regulation","pvalue","qvalue")]
 
 }
 \references{
