@@ -7,8 +7,8 @@ Computes the Quaternary Dot Product Scoring Statistic for Signed and Unsigned Ca
 }
 \description{
              QuaternaryProd is an R package that performs causal reasoning on biological 
-             networks, including publicly available networks such as String-db. QuaternaryProd 
-             is a free alternative to commercial products such as Quiagen and Inginuity pathway 
+             networks, including publicly available networks such as STRINGdb. QuaternaryProd 
+             is an open-source alternative to commercial products such as Quiagen and Inginuity pathway 
              analysis. For a given a set of differentially expressed genes, QuaternaryProd 
              computes the significance of upstream regulators in the network by performing causal
              reasoning using the Quaternary Dot Product Scoring Statistic (Quaternary Statistic),
@@ -18,13 +18,13 @@ Computes the Quaternary Dot Product Scoring Statistic for Signed and Unsigned Ca
              (e.g., a protein) has edges with conflicting signs for the same target gene. On the 
              other hand, the Ternary Statistic provides causal reasoning using the signed and 
              unambiguous edges only. The Vignette provides more details on the Quaternary Statistic 
-             and illustrates an example of how to perform causal reasoning using String-db. 
+             and illustrates an example of how to perform causal reasoning using STRINGdb. 
 }
 \details{
 \tabular{ll}{
 Package: \tab QuaternaryProd\cr
 Type: \tab Package\cr
-Version: \tab 1.0.6\cr
+Version: \tab 1.5.1\cr
 Date: \tab 2015-10-22\cr
 License: \tab GPL (>= 2)\cr
 }

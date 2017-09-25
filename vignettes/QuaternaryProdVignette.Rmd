@@ -3,7 +3,6 @@ title: "QuaternaryProd"
 author: "Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam"
 date: "`r Sys.Date()`"
 output: rmarkdown::pdf_document
-        
 
 vignette: >
   %\VignetteIndexEntry{<span style="color:red">QuaternaryProdVignette</span>}
@@ -11,11 +10,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-\(\indent\) \(\indent\) \(\indent\) \(\indent\) A signed causal graph is a directed graph where the edges are signed and the signs indicate the direction of effect of the source node on the target node (the signs are either + or -). **QuaternaryProd** is a package for computing the Quaternary Dot Product Scoring Statistic (or simply the Quaternary Statistic) for signed causal graphs. The Quaternary Dot Product Scoring Statistic is a generalization of the Ternary Dot Product Scoring Statistic (i.e Chindelevitch's Scoring Statistic [1]) which allows for ambiguities to arise in a signed causal graph. Ambiguities arise when a source node can affect a target node in two different ways or if the direction of causality is unknown. We will first provide some background, and then we will apply the statistic to Stringdb which is a publicly available biological network.
+\(\indent\) \(\indent\) \(\indent\) \(\indent\) A signed causal graph for gene regulation is a directed graph where the edges are signed and the signs indicate the direction of regulation of the target genes (the signs are either (+) or (-)). **QuaternaryProd** is a package for computing the Quaternary Dot Product Scoring Statistic [2] (or simply the Quaternary Statistic) of signed causal graphs for gene regulation. The Quaternary Dot Product Scoring Statistic is a generalization of the Ternary Dot Product Scoring Statistic [1] which allows for ambiguities to arise in the causal graph. Ambiguities arise when a regulator can affect a target gene in two different ways or if the direction of regulation is unknown. We will first provide some background, and then we will apply the statistic to STRINGdb [3] which is a publicly available biological network.
+
 
 ## Introduction
-\(\indent\) \(\indent\) \(\indent\) \(\indent\)  The Quaternary Dot Product Scoring Statistic [2] is a goodness of fit test for examining how well the predictions of a signed and directed causal graph predict on newly realized experimental data. Given a source node \(s\) in a signed causal graph, let \(q_p\), \(q_m\) and \(q_r\) denote the number of target nodes which are increased, decreased and regulated by the source node respectively. Similarly, let \(q_z\) denote the set of target nodes in the causal network which do not share a relation with \(s\) i.e which are not affected by \(s\). Regulated relations occur when a source node regulates a target node without knowing the direction of causality or if an ambiguity in direction of causality occurs. An ambiguity can occur if a source node, according to a given network, shares both increase and decrease relations with the same target node. 
-Next, Suppose we run some experiments on entities which are target nodes in the network. Let \(n_p\), \(n_m\) and \(n_z\) denote the set of values which are increased, decreased and remain unchanged in the experimental values respectively. For the source node \(s\), we can tabulate the predictions from the network vs. the experimental values:
+\(\indent\) \(\indent\) \(\indent\) \(\indent\)  The Quaternary Dot Product Scoring Statistic [2] is a goodness of fit test for evaluating the performance of regulation predictions made by a signed and directed causal network on a given gene expression data set. Given a regulator \(s\) in a causal graph, let \(q_p\), \(q_m\) and \(q_r\) denote the number of target genes which are upregulated (+), downregulated (-) and regulated (r) by the regulator \(s\) respectively. Regulated relations occur when a regulator regulates a target gene without knowing the direction of regulation or if an ambiguity in direction of regulation occurs. An ambiguity can occur if a regulator, according to a given network, shares both (+) and (-) relations with the same target gene. Moreover, let \(q_z\) denote the set of target genes in the causal network which do not share a relation with \(s\) i.e which are not affected by \(s\).
+Next, suppose we are presented with new gene expression data. Let \(n_p\), \(n_m\) and \(n_z\) denote the number of genes which are upregulated, downregulated and are unregulated in the gene expression data respectively. For the regulator \(s\), we can tabulate the predictions of the network vs. the gene expression data:
 
 \begin{table}[!htbp]
 \centering
@@ -32,8 +32,8 @@ Total & \(n_p\)  & \(n_{m}\)   & \(n_z\) & \(T\) \\
 \caption{Tabulation of predictions from network edges vs. observations from experimental results.}
 \end{table}
 
-\(n_{pp}\) denotes the number of target nodes which \(s\) is predicted to increase by the network and were indeed increased in  experimental values; \(n_{pm}\) the number of target nodes which \(s\) is predicted to increase and were decreased in experimental values; \(n_{pz}\) is the number of target nodes which \(s\) is predicted to increase and were unchanged in experimental values. Similar interpretation follows for all other entries of the table. 
-The probability of a table follows the Quaternary Dot Product distribution which is given by:
+\(n_{pp}\) denotes the number of target genes which \(s\) is predicted to upregulate by the network and were indeed upregulated in the gene expression data. \(n_{pm}\) denotes the number of target genes which \(s\) is predicted to upregulate and were downregulated in the gene expression data. \(n_{pz}\) denotes the number of target genes which \(s\) is predicted to upregulate and were not expressed in the gene expression data. Similar interpretation follows for all other entries of the table. 
+The probability of a tabulation table follows the Quaternary Dot Product distribution which is given by:
 \begin{align}
 P(\text{Table}) &= \frac{ \binom{q_p}{n_{pp},n_{pm},n_{pz}} \binom{q_m}{n_{mp},n_{mm},n_{mz}}\binom{q_z}{n_{zp},n_{zm},n_{zz}}\binom{q_r}{n_{rp},n_{rm},n_{rz}}}{\binom{T}{n_p,n_m,n_z}}.
 \end{align}
@@ -75,140 +75,88 @@ pval <- QP_SigPvalue(score = 5, q_p = 20, q_m = 20, q_z = 20, q_r = 0,
 pval
 ```  
 
-If the user is only interested in obtaining statistically significant p-values, then *QP_SigPvalue* is optimized for this purpose. In either case, the user is advised to compute the p-value of a score using the previous two functions which will be faster than computing the entire probability mass function and then computing the p-value.
-Finally, it is possible to also compute the probabilities of scores individually using *QP_Probability* and the support of the distribution using *QP_Support*. 
-Since this package is written to the benefit of bioinformaticians, we will provide an example on how to apply this statistic to a publicly available network.
-One bioinformatic application is to test how well protein-protein causal networks can predict the results in gene expression data. In the last section of this Vignette, we present an example of computing this statistic over the Stringdb network and given gene expression data.   
+If the user is only interested in obtaining statistically significant p-values, then `QP_SigPvalue` is optimized for this purpose. In either case, the user is advised to compute the p-value of a score using the previous two functions which will be faster than computing the entire probability mass function and then computing the p-value.
+Finally, it is possible to also compute the probabilities of scores individually using `QP_Probability` and the support of the distribution using `QP_Support`. 
+Since this package is written for the benefit of bioinformaticians, we will provide an example on how to apply this statistic to a publicly available network.
+One bioinformatic application is to test how well protein-protein causal networks can predict the regulators in gene expression data. In the last section of this Vignette, we present an example for computing this statistic over the STRINGdb network.   
   
-## Edges from STRINGdb
+## Functionality for working with the Homo sapien causal network from STRINGdb
 
-\(\indent\) \(\indent\) \(\indent\) \(\indent\)  You can use the **STRINGdb** package to interact with the [String database](www.string-db.org). The current release of **STRINGdb** only allows querying of neighbors in the network without the direction of action. For the purposes of the Quaternary Dot Product Scoring Statistic, it is necessary to have the direction of action. It is possible to obtain the signed network by downloading it directly from [String-db network source](http://string-db.org/newstring_cgi/show_download_page.pl), selecting the species of interest, and downloading the protein actions network. Here, we present an example for working with the freely available Homo Sapien protein-protein interaction network from STRINGdb. The network is in tab seperated format which is straightforward to work with. It is possible to get a larger version of network with more relations from STRINGdb by signing a license agreement with the authors of STRINGdb.
+\(\indent\) \(\indent\) \(\indent\) \(\indent\) Here we provide functionality for using **QuaternaryProd** with the STRINGdb Homo Sapien causal network (version 10) provided under the [creative commons license](https://creativecommons.org/licenses/by/3.0/). 
 
-### Parse File
+### Compute Pvalues Over the Network
+\indent  Given new gene expression data, we can compute the scores and p-values for all regulators in the STRINGdb Homo Sapien causal network using the specialized `RunCRE_HSAStringDB` function. We use the gene expression data sets that were used in [1]. The data sets contain the c-Myc and E2F3 expression signatures. Note that the results may differ from those reported in [2] since the network was parsed differently.
 
-\(\indent\) \(\indent\) \(\indent\) \(\indent\)    In this section, we provide an example of one possible way to parse the Homo Sapien protein actions network and prepare it to be used with our package. First, we need to upload the network which is attached to **QuaternaryProd** for convenience.
+#### Load Gene Expression Data
+First, we load all the data sets. The gene expression data sets must have the following columns: 1- `entrez` column corresponding to the entrez id of the gene, 2- `pvalue` column corresponding to the pvalue of the gene, 3- `fc` column corresponding to the fold change of the gene. After we load the data sets, we make sure that there are no duplicated entrez ids in the data sets.
 
 ```{r, message=FALSE}
 library(QuaternaryProd)
-library(readr)
-library(org.Hs.eg.db)
-library(dplyr)
-library(stringr)
-library(fdrtool)
 
-# Get the full file name containing the STRINGdb relations
-ff <- system.file("extdata", "9606.protein.actions.v10.txt.gz", package="QuaternaryProd") 
-all_rels <- read_tsv(gzfile(ff), col_names = TRUE)
+# Get gene expression data
+e2f3 <- system.file("extdata", "e2f3_sig.txt",
+                             package = "QuaternaryProd")
+e2f3 <- read.table(e2f3, sep = "\t",
+                             header = TRUE, stringsAsFactors = FALSE)
+myc <- system.file("extdata", "myc_sig.txt",
+                             package = "QuaternaryProd")
+myc <- read.table(myc, sep = "\t",
+                             header = TRUE, stringsAsFactors = FALSE)
 
+# Rename column names appropriately
+# and remove duplicated entrez ids in the gene expression data
+names(e2f3) <- c("entrez", "pvalue", "fc")
+e2f3 <- e2f3[!duplicated(e2f3$entrez),]
+
+names(myc) <- c("entrez", "pvalue", "fc")
+myc <- myc[!duplicated(myc$entrez),]
 ```
 
-Next, we filter out the important columns and important relations. We remove all rows which do not have a relation *activation*, *inhibition* and *expression*. Moreover, we also consider reverse causality for any relation which has a *direction* value equal to 0.
+#### Compute the Quaternary Dot Product Scoring Statistic over STRINGdb
+
+We can now compute the Quaternary Dot Product Scoring Statistic over STRINGdb using the following:
 
 ```{r, message=FALSE}
-# Set new names for columns
-names(all_rels) <- c("srcuid", "trguid", "mode", "action", "direction","score")
-Rels <- all_rels[, c("srcuid", "trguid", "mode", "direction")]
-
-# Get all rows with causal relations
-Rels <- Rels[Rels$mode %in% c("activation", "inhibition","expression"),]
-
-# Get causal relations where direction is not specified, and consider reversed 
-# direction of causality as a valid causal relation
-Bidirectional <- Rels[Rels$direction == 0 , c("trguid", "srcuid", "mode", "direction")]
-names(Bidirectional) <- c("srcuid", "trguid", "mode", "direction")
-Rels <- unique(bind_rows(Rels, Bidirectional))
-Rels$direction <- NULL
-
-# Rename activation as increases, inhibition as decreases, expression
-# as regulates
-Rels$mode <- sub("activation", "increases", Rels$mode)
-Rels$mode <- sub("inhibition", "decreases", Rels$mode)
-Rels$mode <- sub("expression", "regulates", Rels$mode)
-Rels <- unique(Rels)
-
-# Get a subset of the network: Skip this step if you want the p-values 
-# of the scores corresponding to the source nodes computed over the 
-# entire network. 
-Rels <- Rels[sample(1:nrow(Rels), 40000, replace=FALSE),]
+# Compute the Quaternary Dot Product Scoring Statistic for only statistically
+# significant regulators
+quaternary_results <- RunCRE_HSAStringDB(e2f3, method = "Quaternary",
+                                   fc.thresh = log2(1.3), pval.thresh = 0.05,
+                                   only.significant.pvalues = TRUE, 
+                                   significance.level = 0.05)
+quaternary_results[1:4, c("uid","symbol","regulation","pvalue")]
 ```
+<br/>
+<br/>
+`RunCRE_HSAStringDB` returns a data frame containing all the regulators of the String causal network. Computing the p-value of the Quaternary Dot Product Scoring Statistic has computational time complexity \(\mathcal{O}(kn^3)\) (see [2]). To improve performance, `RunCRE_HSAStringDB` has an optional argument `only.significant.pvalues` which can be set to `TRUE` so that only the p-values of the statistically significant regulators are computed. P-values which are not statistically significant (i.e p-values greater than `signficance.level`) are not reported, in which case the p-value is set to a value of -1. If the user wishes to compute p-values for regulators which are not statistically significant then the user should set the parameter `only.significant.pvalues = FALSE`. The regulators are ordered in increasing order of the p-values (Note: details on the columns of the data frame returned can be found in the help page for `RunCRE_HSAStringDB`). Finally, we see that this approach retrieves the signal regulator E2F1. 
 
-Third, we extract the protein entities from the network, and we map them to their respective genes. Note, the entities could have been possibly a drug or compound, but we are working with this protein interactions network for the purpose of providing a nontrivial example.
+#### Compute the Ternary Dot Product Scoring Statistic and the Enrichment test over STRINGdb
+
+To compute the Ternary Dot Product Statistic over STRINGdb we can use the following:
 
 ```{r, message=FALSE}
-# Get all unique protein ensemble ids in the causal network
-allEns <- unique(c(Rels$srcuid, Rels$trguid))
-
-# Map ensemble protein ids to entrez gene ids 
-map <- org.Hs.egENSEMBLPROT2EG
-id <- unlist(mget(sub("9606.","",allEns), map, ifnotfound=NA))
-id[is.na(id)] <- "-1"
-uid <- paste("9606.", names(id), sep="")
-
-# Function to map entrez ids to gene symbols
-map <- org.Hs.egSYMBOL
-symbol <- unlist(mget(id, map, ifnotfound=NA))
-symbol[is.na(symbol)] <- "-1"
-
-# Create data frame of STRINGdb protein Id, entrez id and gene symbol and type of entity
-Ents <- data_frame(uid, id, symbol, type="protein")
-Ents <- Ents[Ents$uid %in% allEns,]
-
-# Remove ensemble ids in entities with duplicated entrez id
-Ents <- Ents[!duplicated(Ents$id),]
-
-# Add mRNAs to entities
-uid <- paste("mRNA_", Ents$uid, sep = "")
-mRNAs <- data_frame(uid=uid, id=Ents$id, symbol=Ents$symbol, type="mRNA")
-Ents <- bind_rows(Ents, mRNAs)
+ternary_results <- RunCRE_HSAStringDB(myc, method = "Ternary",
+                                      fc.thresh = log2(1.3), pval.thresh = 0.05,
+                                      only.significant.pvalues = TRUE,
+                                      significance.level = 0.05)
+ternary_results[1:4, c("uid","symbol","regulation","pvalue")]
 ```
+<br/>
+<br/>
 
-Finally, we filter unique relations in the network, and remove source proteins which do not have more than 10 children in the network.
+We see that this method retrieves MYC as a significant regulator. To compute the Enrichment test over STRINGdb we can use the following:
 
 ```{r, message=FALSE}
-# Get all unique relations
-Rels$trguid <- paste("mRNA_", Rels$trguid, sep="")
-Rels <- Rels[Rels$srcuid %in% Ents$uid & Rels$trguid %in% Ents$uid,]
-Rels <- unique(Rels)
-
-# Leave source proteins which contain at least 10 edges
-sufficientRels <- group_by(Rels, srcuid) %>% summarise(count=n()) 
-sufficientRels <- sufficientRels %>% filter(count > 10)
-Rels <- Rels %>% filter(srcuid %in% sufficientRels$srcuid)
+enrichment_results <- RunCRE_HSAStringDB(myc, method = "Enrichment",
+                                         fc.thresh = log2(1.3), pval.thresh = 0.05,
+                                         only.significant.pvalues = TRUE,
+                                         significance.level = 0.05)
+enrichment_results[1:10, c("uid","symbol","regulation","pvalue")]
 ```
+<br/>
+<br/>
 
-### Compute Pvalues Over the Network
-\indent  Given new gene expression data, we can compute the scores and p-values for all source nodes in the network. *BioQCREtoNet* is a specialized function for this purpose.
+We see that the Enrichment method also retrieves MYC as a significant regulator although not as significant as in the case of the Ternary Dot Product Scoring Statistic.
 
-```{r, message=FALSE}
-# Gene expression data
-evidence1 <- system.file("extdata", "e2f3_sig.txt", package = "QuaternaryProd") 
-evidence1 <- read.table(evidence1, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-evidence2 <- system.file("extdata", "myc_sig.txt", package = "QuaternaryProd") 
-evidence2 <- read.table(evidence2, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-evidence3 <- system.file("extdata", "ras_sig.txt", package = "QuaternaryProd") 
-evidence3 <- read.table(evidence3, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
-
-# Remove duplicated entrez ids in evidence and rename column names appropriately
-names(evidence1) <- c("entrez", "pvalue", "fc")
-evidence1 <- evidence1[!duplicated(evidence1$entrez),]
-
-names(evidence2) <- c("entrez", "pvalue", "fc")
-evidence2 <- evidence2[!duplicated(evidence2$entrez),]
-
-names(evidence3) <- c("entrez", "pvalue", "fc")
-evidence3 <- evidence3[!duplicated(evidence3$entrez),]
-
-# Run Quaternary CRE for entire Knowledge base on new evidence
-# which computes the statistic for each of the source proteins
-
-CRE_results <- BioQCREtoNet(Rels, evidence1, Ents, is.Logfc = TRUE)
-# Get FDR corrected p-values
-CRE_results$pvalue <- fdrtool(CRE_results$pvalue, "pvalue", FALSE, 
-                                                      FALSE, FALSE, "fndr")$q
-head(CRE_results[order(CRE_results$pvalue), c("uid","name","pvalue")])
-```
-
-*BioQCREtoNet* returns a data frame containing all the source nodes of the causal network, all of which had their respective score p-value computed. The source nodes are ordered in increasing order (Note: details on the columns of the data frame returned can be found in the help page for *BioQCREtoNet*).
 
 ## References
 
@@ -217,4 +165,6 @@ head(CRE_results[order(CRE_results$pvalue), c("uid","name","pvalue")])
 [2] Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and their practical utility on public networks. BMC Bioinformatics, 17:318, 2016. ISSN 1471-2105. doi: 10.1186/s12859-016-1181-8.
 
 [3] Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage and integration. In:'Nucleic Acids Res. 2013 Jan;41(Database issue):D808-15. doi: 10.1093/nar/gks1094. Epub 2012 Nov 29'.
+
+
 

@@ -49,9 +49,6 @@ Setting epsilon to zero will compute the probability mass function without ignor
 pval <- QP_SigPvalue(50,50,50,50,0,50,50,50)
 
 }
-\author{
-Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
-}
 \references{
 Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Daniel Ziemek, and
             Kourosh Zarringhalam. Interpreting transcriptional changes using causal graphs: new methods and
@@ -65,4 +62,6 @@ Carl Tony Fakhry, Parul Choudhary, Alex Gutteridge, Ben Sidders, Ping Chen, Dani
 \seealso{
 \code{\link{QP_Pvalue}}
 }
-
+\author{
+Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam
+}
