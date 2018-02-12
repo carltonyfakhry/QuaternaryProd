@@ -3,6 +3,7 @@ title: "QuaternaryProd"
 author: "Carl Tony Fakhry, Ping Chen and Kourosh Zarringhalam"
 date: "`r Sys.Date()`"
 output: rmarkdown::pdf_document
+urlcolor: blue
 
 vignette: >
   %\VignetteIndexEntry{<span style="color:red">QuaternaryProdVignette</span>}
