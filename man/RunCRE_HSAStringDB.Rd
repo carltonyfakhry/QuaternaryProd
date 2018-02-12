@@ -4,7 +4,8 @@
 \alias{RunCRE_HSAStringDB}
 \title{This function runs a causal relation engine by computing the Quaternary Dot
 Product Scoring Statistic, Ternary Dot Product Scoring Statistic or the Enrichment test over the Homo
-Sapien STRINGdb causal network.}
+Sapien STRINGdb causal network (version 10 provided under the Creative Commons license: 
+https://creativecommons.org/licenses/by/3.0/).}
 \usage{
 RunCRE_HSAStringDB(gene_expression_data, method = "Quaternary", 
                     fc.thresh = log2(1.3), pval.thresh = 0.05, 
@@ -53,13 +54,16 @@ This function returns a data frame containing parameters concerning the method u
 \item \code{significant.ambiguous} Total number of children of the given regulator which are regulated by the given regulator without
                              knowing the direction of regulation and are also present in \code{gene_expression_data}.  
 \item \code{unknown} Number of target nodes in the STRINGdb causal network which do not interact with the given regulator.
-\item \code{pvalue} P-value of the score computed according to the selected method.
+\item \code{pvalue} P-value of the score computed according to the selected method. If \code{only.significant.pvalues = TRUE}
+                    and the \code{pvalue} of the regulator is greater than \code{significance.level}, then
+                    the p-value is not computed and is set to a value of -1.
 }
 }
 \description{
 This function runs a causal relation engine by computing the Quaternary Dot
              Product Scoring Statistic, Ternary Dot Product Scoring Statistic or the Enrichment test over the Homo
-             Sapien STRINGdb causal network.
+             Sapien STRINGdb causal network (version 10 provided under the Creative Commons license: 
+             https://creativecommons.org/licenses/by/3.0/).
 }
 \examples{
 
