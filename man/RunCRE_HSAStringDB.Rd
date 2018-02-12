@@ -4,7 +4,7 @@
 \alias{RunCRE_HSAStringDB}
 \title{This function runs a causal relation engine by computing the Quaternary Dot
 Product Scoring Statistic, Ternary Dot Product Scoring Statistic or the Enrichment test over the Homo
-Sapien STRINGdb causal network (version 10 provided under the creative commons license: 
+Sapien STRINGdb causal network (version 10 provided under the Creative Commons license: 
 https://creativecommons.org/licenses/by/3.0/).}
 \usage{
 RunCRE_HSAStringDB(gene_expression_data, method = "Quaternary", 
@@ -62,7 +62,7 @@ This function returns a data frame containing parameters concerning the method u
 \description{
 This function runs a causal relation engine by computing the Quaternary Dot
              Product Scoring Statistic, Ternary Dot Product Scoring Statistic or the Enrichment test over the Homo
-             Sapien STRINGdb causal network (version 10 provided under the creative commons license: 
+             Sapien STRINGdb causal network (version 10 provided under the Creative Commons license: 
              https://creativecommons.org/licenses/by/3.0/).
 }
 \examples{
