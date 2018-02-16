@@ -138,8 +138,8 @@ QP_Pmf <- function(q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16){
   }
   
   # Epsilon must be positive between 0 and 1.
-  if (epsilon < 0 || epsilon > 1){
-    stop("Epsilon must be positive between 0 and 1!\n")
+  if (length(epsilon) != 1 || !is.numeric(epsilon) || epsilon < 0 || epsilon > 1){
+    stop("Epsilon must be positive numeric number >= 0 and <= 1!\n")
   }
   
   # Sum of row constraints must equal sum of column constraints.
@@ -225,8 +225,8 @@ QP_Pvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-16)
   }
   
   # Epsilon must be positive between 0 and 1.
-  if (epsilon < 0 || epsilon > 1){
-    stop("Epsilon must be positive between 0 and 1!\n")
+  if (length(epsilon) != 1 || !is.numeric(epsilon) || epsilon < 0 || epsilon > 1){
+    stop("Epsilon must be positive numeric number >= 0 and <= 1!\n")
   }
   
   # Sum of row constraints must equal sum of column constraints.
@@ -316,8 +316,8 @@ QP_SigPvalue <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1e-
   }
   
   # Epsilon must be positive between 0 and 1.
-  if (epsilon < 0 || epsilon > 1){
-    stop("Epsilon must be positive between 0 and 1!\n")
+  if (length(epsilon) != 1 || !is.numeric(epsilon) || epsilon < 0 || epsilon > 1){
+    stop("Epsilon must be positive numeric number >= 0 and <= 1!\n")
   }
   
   # Sum of row constraints must equal sum of column constraints.
@@ -406,8 +406,8 @@ QP_Probability <- function(score, q_p, q_m, q_z, q_r, n_p, n_m, n_z, epsilon = 1
   }
   
   # Epsilon must be positive between 0 and 1.
-  if (epsilon < 0 || epsilon > 1){
-    stop("Epsilon must be positive between 0 and 1!\n")
+  if (length(epsilon) != 1 || !is.numeric(epsilon) || epsilon < 0 || epsilon > 1){
+    stop("Epsilon must be positive numeric number >= 0 and <= 1!\n")
   }
   
   # Sum of row constraints must equal sum of column constraints.

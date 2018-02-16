@@ -123,12 +123,13 @@ We can now compute the Quaternary Dot Product Scoring Statistic over STRINGdb us
 quaternary_results <- RunCRE_HSAStringDB(e2f3, method = "Quaternary",
                                    fc.thresh = log2(1.3), pval.thresh = 0.05,
                                    only.significant.pvalues = TRUE, 
-                                   significance.level = 0.05)
+                                   significance.level = 0.05,
+                                   epsilon = 1e-16)
 quaternary_results[1:4, c("uid","symbol","regulation","pvalue")]
 ```
 <br/>
 <br/>
-`RunCRE_HSAStringDB` returns a data frame containing all the regulators of the String causal network. Computing the p-value of the Quaternary Dot Product Scoring Statistic has computational time complexity \(\mathcal{O}(kn^3)\) (see [2]). To improve performance, `RunCRE_HSAStringDB` has an optional argument `only.significant.pvalues` which can be set to `TRUE` so that only the p-values of the statistically significant regulators are computed. P-values which are not statistically significant (i.e p-values greater than `signficance.level`) are not reported, in which case the p-value is set to a value of -1. If the user wishes to compute p-values for regulators which are not statistically significant then the user should set the parameter `only.significant.pvalues = FALSE`. The regulators are ordered in increasing order of the p-values (Note: details on the columns of the data frame returned can be found in the help page for `RunCRE_HSAStringDB`). Finally, we see that this approach retrieves the signal regulator E2F1. 
+`RunCRE_HSAStringDB` returns a data frame containing all the regulators of the String causal network. An efficient algorithm for computing the Quaternary Dot Product Scoring Statistic is presented in [2] and is implemented in **QuaternaryProd**. To further improve performance, `RunCRE_HSAStringDB` has an optional argument `only.significant.pvalues` which can be set to `TRUE` so that only the p-values of the statistically significant regulators are computed. P-values which are not statistically significant (i.e p-values greater than `signficance.level`) are not reported, in which case the p-value is set to a value of -1. If the user wishes to compute p-values for regulators which are not statistically significant then the user should set the parameter `only.significant.pvalues = FALSE`. The regulators are ordered in increasing order of the p-values (Note: details on the columns of the data frame returned can be found in the help page for `RunCRE_HSAStringDB`). Finally, we see that this approach retrieves the signal regulator E2F1. 
 
 #### Compute the Ternary Dot Product Scoring Statistic and the Enrichment test over STRINGdb
 
@@ -138,7 +139,8 @@ To compute the Ternary Dot Product Statistic over STRINGdb we can use the follow
 ternary_results <- RunCRE_HSAStringDB(myc, method = "Ternary",
                                       fc.thresh = log2(1.3), pval.thresh = 0.05,
                                       only.significant.pvalues = TRUE,
-                                      significance.level = 0.05)
+                                      significance.level = 0.05,
+                                      epsilon = 1e-16)
 ternary_results[1:4, c("uid","symbol","regulation","pvalue")]
 ```
 <br/>
@@ -150,7 +152,8 @@ We see that this method retrieves MYC as a significant regulator. To compute the
 enrichment_results <- RunCRE_HSAStringDB(myc, method = "Enrichment",
                                          fc.thresh = log2(1.3), pval.thresh = 0.05,
                                          only.significant.pvalues = TRUE,
-                                         significance.level = 0.05)
+                                         significance.level = 0.05,
+                                         epsilon = 1e-16)
 enrichment_results[1:10, c("uid","symbol","regulation","pvalue")]
 ```
 <br/>

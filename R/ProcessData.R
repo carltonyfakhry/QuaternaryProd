@@ -25,7 +25,8 @@ getGeneVals <- function(trguids, gene_expression_data){
 #' 
 #' @usage RunCRE_HSAStringDB(gene_expression_data, method = "Quaternary", 
 #'                     fc.thresh = log2(1.3), pval.thresh = 0.05, 
-#'                     only.significant.pvalues = FALSE, significance.level = 0.05) 
+#'                     only.significant.pvalues = FALSE, significance.level = 0.05,
+#'                     epsilon = 1e-16) 
 #' 
 #' @param gene_expression_data A data frame for gene expression data. The \code{gene_expression_data} data frame must have three columns \code{entrez}, 
 #'        \code{fc} and \code{pvalue}. \code{entrez} denotes the entrez id of a given gene, \code{fc} denotes
@@ -40,6 +41,7 @@ getGeneVals <- function(trguids, gene_expression_data){
 #'        are computed otherwise uncomputed p-values are set to -1. The default value is \code{only.significant.pvalues = FALSE}.
 #' @param significance.level When \code{only.significant.pvalues = TRUE}, only p-values which are less than or equal to 
 #'                           \code{significance.level} are computed. The default value is \code{significance.level = 0.05}.
+#' @param epsilon Threshold for probabilities of matrices. Default value is 1e-16.
 #'           
 #' @return This function returns a data frame containing parameters concerning the method used. The p-values of each
 #'         of the regulators is also computed, and the data frame
@@ -103,7 +105,8 @@ getGeneVals <- function(trguids, gene_expression_data){
 RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", 
                                fc.thresh = log2(1.3), pval.thresh = 0.05,
                                only.significant.pvalues = FALSE,
-                               significance.level = 0.05){
+                               significance.level = 0.05,
+                               epsilon = 1e-16){
   
   f1 <- system.file("extdata", "StringRels.dat", package="QuaternaryProd")
   relations <- read.table(f1, header = T, stringsAsFactors = F)
@@ -133,6 +136,11 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
   # Check significance.level
   if(length(significance.level) != 1 || !is.numeric(significance.level) | significance.level > 1 | significance.level < 0){
     stop("significance.level should be a numeric value >= 0 and <= 1!")
+  }
+  
+  # Epsilon must be positive between 0 and 1.
+  if (length(epsilon) != 1 || !is.numeric(epsilon) || epsilon < 0 || epsilon > 1){
+    stop("Epsilon must be positive numeric number >= 0 and <= 1!\n")
   }
   
   if (!is.data.frame(gene_expression_data)){ 
@@ -289,13 +297,13 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
     
     if (method == "Quaternary"){
       pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Quaternary',
-                     only.significant.pvalues = only.significant.pvalues, significance.level = significance.level)
+                     only.significant.pvalues = only.significant.pvalues, significance.level = significance.level, epsilon = epsilon)
     } else if (method == "Ternary"){
       pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Ternary',
-                     only.significant.pvalues = only.significant.pvalues, significance.level = significance.level)
+                     only.significant.pvalues = only.significant.pvalues, significance.level = significance.level, epsilon = epsilon)
     } else if (method == "Enrichment"){
       pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Enrichment',
-                     only.significant.pvalues = only.significant.pvalues, significance.level = significance.level)
+                     only.significant.pvalues = only.significant.pvalues, significance.level = significance.level, epsilon = epsilon)
     } else {
       stop("Select one of methods: Quaternary, Ternary or Enrichment")
     }
@@ -339,7 +347,7 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
 
 
 # This function runs the CRE based on the version specified
-runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method, only.significant.pvalues, significance.level){
+runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method, only.significant.pvalues, significance.level, epsilon){
   
   if(method == 'Quaternary'){
     
@@ -356,10 +364,10 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
     pval.up <- NULL
     if(only.significant.pvalues){
       pval.up <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon, sig_level = significance.level)
     }else{
       pval.up <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                          q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+                          q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon)
     }
     
     ## Assume down-regulated
@@ -369,10 +377,10 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
     pval.down <- NULL
     if(only.significant.pvalues){
       pval.down <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                            q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+                            q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon, sig_level = significance.level)
     }else{
       pval.down <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                             q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+                             q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon)
     }
     
   } else if(method == 'Ternary'){
@@ -389,10 +397,10 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
     pval.up <- NULL
     if(only.significant.pvalues){
       pval.up <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                              q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+                              q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon, sig_level = significance.level)
     }else{
       pval.up <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon)
     }
     
     ## Assume down-regulated
@@ -402,10 +410,10 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
     pval.down <- NULL
     if(only.significant.pvalues){
       pval.down <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                                q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+                                q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon, sig_level = significance.level)
     }else{
       pval.down <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                             q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+                             q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon)
     }
     
     
@@ -428,10 +436,10 @@ runCRE = function(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, me
     
     if(only.significant.pvalues){
       pval.up <- QP_SigPvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                              q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, sig_level = significance.level)
+                              q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon, sig_level = significance.level)
     }else{
       pval.up <- QP_Pvalue(score = score, q_p = qPlus, q_m = qMinus, q_z = qZero,
-                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero)
+                           q_r = qR, n_p = nPlus, n_m = nMinus, n_z = nZero, epsilon = epsilon)
     }
     
     pval.down <- pval.up
