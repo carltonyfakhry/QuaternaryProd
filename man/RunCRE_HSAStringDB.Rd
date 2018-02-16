@@ -9,7 +9,8 @@ https://creativecommons.org/licenses/by/3.0/).}
 \usage{
 RunCRE_HSAStringDB(gene_expression_data, method = "Quaternary", 
                     fc.thresh = log2(1.3), pval.thresh = 0.05, 
-                    only.significant.pvalues = FALSE, significance.level = 0.05)
+                    only.significant.pvalues = FALSE, significance.level = 0.05,
+                    epsilon = 1e-16)
 }
 \arguments{
 \item{gene_expression_data}{A data frame for gene expression data. The \code{gene_expression_data} data frame must have three columns \code{entrez}, 
@@ -30,6 +31,8 @@ are computed otherwise uncomputed p-values are set to -1. The default value is \
 
 \item{significance.level}{When \code{only.significant.pvalues = TRUE}, only p-values which are less than or equal to 
 \code{significance.level} are computed. The default value is \code{significance.level = 0.05}.}
+
+\item{epsilon}{Threshold for probabilities of matrices. Default value is 1e-16.}
 }
 \value{
 This function returns a data frame containing parameters concerning the method used. The p-values of each
