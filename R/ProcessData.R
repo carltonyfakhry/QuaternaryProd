@@ -250,9 +250,9 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
   gene_expression_data.tmp <- merge(gene_expression_data, entities, by.x = "entrez" , by.y = "id")
   gene_expression_data <- data.frame(uid = gene_expression_data.tmp[,"uid"], val = gene_expression_data.tmp[,"val"], stringsAsFactors = F)
     
-  u.hyps <- list.load(system.file("extdata", "u.hyps.yaml", package="QuaternaryProd"))
-  child.uid <- list.load(system.file("extdata", "child.uid.yaml", package="QuaternaryProd"))
-  child.sgn <- list.load(system.file("extdata", "child.sgn.yaml", package="QuaternaryProd"))
+  u.hyps <- read_yaml(system.file("extdata", "u.hyps.yaml", package="QuaternaryProd"))
+  child.uid <- read_yaml(system.file("extdata", "child.uid.yaml", package="QuaternaryProd"))
+  child.sgn <- read_yaml(system.file("extdata", "child.sgn.yaml", package="QuaternaryProd"))
   
   # Get the value of regulation of the children from the gene expression data
   child.val <- lapply(child.uid, function(x, gene_expression_data) 
