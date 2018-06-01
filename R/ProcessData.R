@@ -244,7 +244,7 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
   if (n.e2 == 0){
     stop("All entrez ids in gene_expression_data are not present in entities data frame!")
   }
-  cat(paste((n.e1-n.e2+n.e0), "rows from gene_expression_data removed due", "\n", "to entrez ids being unrepsented in StringDB entities!", sep = " "))
+  cat(paste((n.e1-n.e2), "rows from gene_expression_data removed due", "\n", "to entrez ids being unrepsented in StringDB entities!", sep = " "))
 
   # Make sure no entrez id in entities maps to two entities
   gene_expression_data.tmp <- merge(gene_expression_data, entities, by.x = "entrez" , by.y = "id")
