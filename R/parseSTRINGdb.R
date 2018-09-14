@@ -90,12 +90,12 @@
 #   Rels <- Rels[order(Rels$srcuid, Rels$trguid),]
 # 
 #   # Handle ambiguities if source node affects target node in more than one way
-#   temp.rels <- Rels[which(Rels$mode %in% c(1,-1)),]
-#   temp.rels <- temp.rels[,c("srcuid","trguid")]
-#   indices1 <- which(duplicated(temp.rels))
+#   indices1 <- which(duplicated(Rels[,c("srcuid", "trguid")]))
 #   for(i in indices1){
-#     indices2 <- which(Rels$srcuid == temp.rels$srcuid[i] & Rels$trguid == temp.rels$trguid[i])
-#     if(all(c(-1,1) %in% unique(Rels$mode[indices2]))){
+#     indices2 <- which(Rels$srcuid == Rels$srcuid[i] & Rels$trguid == Rels$trguid[i])
+#     if(all(c(-1,1,0) %in% unique(Rels$mode[indices2]))){
+#       Rels$mode[indices2] = 0
+#     }else if(all(c(-1,1) %in% unique(Rels$mode[indices2]))){
 #       Rels$mode[indices2] = 0
 #     }else if(1 %in% unique(Rels$mode[indices2])){
 #       Rels$mode[indices2] = 1
@@ -105,27 +105,28 @@
 #       Rels$mode[indices2] = 0
 #     }
 #   }
+#   
 #   Rels <- Rels[!duplicated(Rels),]
 #   Rels <- Rels[which(Rels$srcuid != Rels$trguid),]
 # 
 #   write.table(Rels, "/home/kolonel/Programs/QuaternaryProd/inst/extdata/StringRels.dat", col.names = T, row.names = F)
 #   write.table(Ents, "/home/kolonel/Programs/QuaternaryProd/inst/extdata/StringEnts.dat", col.names = T, row.names = F)
 # 
- # Rels = read.table("~/Programs/QuaternaryProd/inst/extdata/StringRels.dat", header = T)
- # Ents = read.table("~/Programs/QuaternaryProd/inst/extdata/StringEnts.dat", header = T)
- # 
- # # Proteins to be tested
- # u.hyps <- unique(Rels$srcuid)
- # 
- # # For each protein, get its children
- # child.uid <- lapply(u.hyps, function(x, Rels) Rels$trguid[which(Rels$srcuid == x)], Rels = Rels)
- # 
- # # For each protein, Find if its children are upregulated or downregulated
- # child.sgn <- lapply(u.hyps, function(x, Rels) ifelse(Rels$mode[which(Rels$srcuid == x)] == 1,
- #                                                           1, ifelse(Rels$mode[which(Rels$srcuid == x)] == -1, -1, 0)), Rels = Rels)
- # 
- # write_yaml(u.hyps, file='/home/kolonel/Programs/QuaternaryProd/inst/extdata/u.hyps.yaml')
- # write_yaml(child.uid, file='/home/kolonel/Programs/QuaternaryProd/inst/extdata/child.uid.yaml')
- # write_yaml(child.sgn, file='/home/kolonel/Programs/QuaternaryProd/inst/extdata/child.sgn.yaml')
+#   Rels = read.table("~/Programs/QuaternaryProd/inst/extdata/StringRels.dat", header = T)
+#   Ents = read.table("~/Programs/QuaternaryProd/inst/extdata/StringEnts.dat", header = T)
+#   
+#   # Proteins to be tested
+#   u.hyps <- unique(Rels$srcuid)
+#   
+#   # For each protein, get its children
+#   child.uid <- lapply(u.hyps, function(x, Rels) Rels$trguid[which(Rels$srcuid == x)], Rels = Rels)
+#   
+#   # For each protein, Find if its children are upregulated or downregulated
+#   child.sgn <- lapply(u.hyps, function(x, Rels) ifelse(Rels$mode[which(Rels$srcuid == x)] == 1,
+#                                                             1, ifelse(Rels$mode[which(Rels$srcuid == x)] == -1, -1, 0)), Rels = Rels)
+#   
+#   write_yaml(u.hyps, file='/home/kolonel/Programs/QuaternaryProd/inst/extdata/u.hyps.yaml')
+#   write_yaml(child.uid, file='/home/kolonel/Programs/QuaternaryProd/inst/extdata/child.uid.yaml')
+#   write_yaml(child.sgn, file='/home/kolonel/Programs/QuaternaryProd/inst/extdata/child.sgn.yaml')
 # 
 # }

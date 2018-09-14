@@ -13,20 +13,106 @@ getGeneVals <- function(trguids, gene_expression_data){
 
 
 
+# This function checks the validity of the relations data frame
+check_relations <- function(relations, entities){
+  
+  if(ncol(relations) != 3 | !all(names(relations) == c("srcuid", "trguid", "mode"))){
+    stop("Please provide a valid relations data frame containing columns: srcuid, trguid, mode!")
+  }
+    
+  # Check for NAs in relations
+  if (length(which(is.na(relations))) > 0){
+    stop("Relations data frame contains rows with NAs!")
+  }
+  
+  # Check if there are duplicated rows in relations
+  if(anyDuplicated(relations)){
+    stop("Duplicate rows in relations found!")
+  }
+  
+  # Check if there are duplicate srcuid-trguid relations with different modes
+  if(anyDuplicated(relations[,c("srcuid", "trguid")])){
+    stop("Duplicate srcuid-trguid relation with different modes found in relations!")
+  }
+  
+  # Check data types of entities column
+  if(!is.integer(relations$srcuid) | !is.integer(relations$trguid) | !is.integer(relations$mode)){
+    stop("In relations, all columns must be of type integer!")
+  }
+  
+  # Make sure all relations are either increases, decreases or regulates
+  if(!all(relations$mode %in% c(1, -1, 0))){
+    stop("All relations between srcuid and trguid in relations data frame must be either +1, -1 or 2!")
+  }
+  
+  # Make sure all relation nodes are in entities
+  unique.srcuids <- unique(relations$srcuid)
+  unique.trguids <- unique(relations$trguid)
+  
+  if(!all(unique.trguids %in% entities$uid)){
+    stop("All trguids in relations must be present in the uid column of the entities data frame!")
+  }
+  
+  if(!all(unique.srcuids %in% entities$uid)){
+    stop("All srcuids in relations must be present in the uid column of the entities data frame!")
+  }
+  
+}
+
+
+
+# This function checks the validity of the entities data frame
+check_entities <- function(entities){
+
+  if(ncol(entities) != 4 | !all(names(entities) == c("uid", "id", "ensembleid", "symbol"))){
+    stop("Please provide a valid entities data frame containing columns: uid, id, symbol and type!")
+  }
+    
+  # Check for NAs in entities
+  if(length(which(is.na(entities))) > 0){
+    stop("Entities data frame contains rows with NAs!")
+  }
+  
+  # Check if there are duplicated rows in entities
+  if(nrow(entities[duplicated(entities),]) > 0){
+    stop("Duplicate rows in entities found!")
+  }
+  
+  # Check if there are duplicated uids in entities
+  if(any(duplicated(entities$uid))){
+    stop("Please remove duplicated uid in entities data frame!")
+  }
+  
+  # Check data types of entities column
+  if(!is.integer(entities$uid)){
+    stop("In entities, column uid must be of type integer!")
+  }
+  
+  if(!is.character(entities$id) | !is.character(entities$symbol) | !is.character(entities$ensembleid)){
+    stop("In entities, columns id, ensembleid and symbol must be of type character!")
+  }
+  
+
+}
+
+
+
 #' This function runs a causal relation engine by computing the Quaternary Dot
 #' Product Scoring Statistic, Ternary Dot Product Scoring Statistic or the Enrichment test over the Homo
 #' Sapien STRINGdb causal network (version 10 provided under the Creative Commons license: 
-#' https://creativecommons.org/licenses/by/3.0/).
+#' https://creativecommons.org/licenses/by/3.0/). Note that the user has the option of specifying other causal networks
+#' with this function.
 #' 
 #' @description This function runs a causal relation engine by computing the Quaternary Dot
 #'              Product Scoring Statistic, Ternary Dot Product Scoring Statistic or the Enrichment test over the Homo
 #'              Sapien STRINGdb causal network (version 10 provided under the Creative Commons license: 
-#'              https://creativecommons.org/licenses/by/3.0/).
+#'              https://creativecommons.org/licenses/by/3.0/). Note that the user has the option of specifying other causal networks
+#'              with this function.
 #' 
 #' @usage RunCRE_HSAStringDB(gene_expression_data, method = "Quaternary", 
 #'                     fc.thresh = log2(1.3), pval.thresh = 0.05, 
 #'                     only.significant.pvalues = FALSE, significance.level = 0.05,
-#'                     epsilon = 1e-16) 
+#'                     epsilon = 1e-16, progressBar = TRUE, relations = NULL, entities = NULL) 
 #' 
 #' @param gene_expression_data A data frame for gene expression data. The \code{gene_expression_data} data frame must have three columns \code{entrez}, 
 #'        \code{fc} and \code{pvalue}. \code{entrez} denotes the entrez id of a given gene, \code{fc} denotes
@@ -41,7 +127,21 @@ getGeneVals <- function(trguids, gene_expression_data){
 #'        are computed otherwise uncomputed p-values are set to -1. The default value is \code{only.significant.pvalues = FALSE}.
 #' @param significance.level When \code{only.significant.pvalues = TRUE}, only p-values which are less than or equal to 
 #'                           \code{significance.level} are computed. The default value is \code{significance.level = 0.05}.
-#' @param epsilon Threshold for probabilities of matrices. Default value is 1e-16.
+#' @param epsilon Threshold for probabilities of matrices. Default value is \code{threshold = 1e-16}.
+#' @param progressBar Progress bar for the percentage of computed p-values for the regulators in the network. Default
+#'        value is \code{progressBar = TRUE}. 
+#' @param relations A data frame containing pairs of connected entities in a causal network,
+#'        and the type of causal relation between them. The data frame must have three columns with column names: \emph{srcuid}, 
+#'        \emph{trguid} and \emph{mode} respective of order. \emph{srcuid} stands for source entity, \emph{trguid} stands for 
+#'        target entity and \emph{mode} stands for the type of relation between \emph{srcuid} and \emph{trguid}. The relation 
+#'        has to be one of \emph{+1} for \emph{upregulation}, \emph{-1} for \emph{downregulation} or \emph{0} for regulation without
+#'        specified direction of regulation. All three columns must be of type integer. Default value is \code{relations = NULL}.
+#' @param entities A data frame of mappings for all entities present in data frame \emph{relations}. \emph{entities} must contain
+#'        four columns: \emph{uid}, \emph{id}, \emph{symbol} and \emph{type} respective of order. \emph{uid} must be 
+#'        of type integer and \emph{id}, \emph{symbol} and \emph{type} must be of type character. \emph{uid} includes every source and target 
+#'        node in the network (i.e \emph{relations}),
+#'        \emph{id} is the id of \emph{uid} (e.g entrez id of an mRNA), \emph{symbol} is the symbol of \emph{id} and \emph{type} 
+#'        is the type of entity of \emph{id} (e.g mRNA, protein, drug or compound). Default value is \code{entities = NULL}.
 #'           
 #' @return This function returns a data frame containing parameters concerning the method used. The p-values of each
 #'         of the regulators is also computed, and the data frame
@@ -49,7 +149,7 @@ getGeneVals <- function(trguids, gene_expression_data){
 #'         names of the data frame are:
 #'         
 #' \itemize{        
-#' \item  \code{uid} The regulator in the STRINGdb network.
+#' \item  \code{uid} The regulator in the causal network.
 #' \item \code{symbol} Symbol of the regulator. 
 #' \item \code{regulation} Direction of regulation of the regulator.
 #' \item \code{correct.pred} Number of correct predictions in \code{gene_expression_data} when compared to predictions made
@@ -64,7 +164,7 @@ getGeneVals <- function(trguids, gene_expression_data){
 #'                              knowing the direction of regulation.
 #' \item \code{significant.ambiguous} Total number of children of the given regulator which are regulated by the given regulator without
 #'                              knowing the direction of regulation and are also present in \code{gene_expression_data}.  
-#' \item \code{unknown} Number of target nodes in the STRINGdb causal network which do not interact with the given regulator.
+#' \item \code{unknown} Number of target nodes in the causal network which do not interact with the given regulator.
 #' \item \code{pvalue} P-value of the score computed according to the selected method. If \code{only.significant.pvalues = TRUE}
 #'                     and the \code{pvalue} of the regulator is greater than \code{significance.level}, then
 #'                     the p-value is not computed and is set to a value of -1.
@@ -106,12 +206,10 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
                                fc.thresh = log2(1.3), pval.thresh = 0.05,
                                only.significant.pvalues = FALSE,
                                significance.level = 0.05,
-                               epsilon = 1e-16){
+                               epsilon = 1e-16, progressBar = TRUE, 
+                               relations = NULL, entities = NULL){
   
-  f1 <- system.file("extdata", "StringRels.dat", package="QuaternaryProd")
-  relations <- read.table(f1, header = T, stringsAsFactors = F)
-  f2 <- system.file("extdata", "StringEnts.dat", package="QuaternaryProd")
-  entities <- read.table(f2, header = T, stringsAsFactors = F)
+  cat("(1/5) Begin Processing...\n")
   
   # Check method
   if(!(method %in% c("Quaternary", "Ternary", "Enrichment"))){
@@ -142,6 +240,24 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
   if (length(epsilon) != 1 || !is.numeric(epsilon) || epsilon < 0 || epsilon > 1){
     stop("Epsilon must be positive numeric number >= 0 and <= 1!\n")
   }
+  
+  
+  # Check relations and entities
+  usingSTRINGdb <- NULL
+  if((length(relations) != 0 & !is.null(relations)) & (length(entities) != 0 & !is.null(entities))){
+    check_relations(relations, entities)
+    check_entities(entities)
+    usingSTRINGdb <- FALSE
+  }else if(length(relations) == 0 & is.null(relations) & length(entities) == 0 & is.null(entities)){ 
+    f1 <- system.file("extdata", "StringRels.dat", package="QuaternaryProd")
+    relations <- read.table(f1, header = T, stringsAsFactors = F)
+    f2 <- system.file("extdata", "StringEnts.dat", package="QuaternaryProd")
+    entities <- read.table(f2, header = T, stringsAsFactors = F)
+    usingSTRINGdb <- TRUE
+  }else{
+    stop("Both relations and entities must be specified otherwise set relations and entities to NULL and use STRINGdb!")
+  }
+      
   
   if (!is.data.frame(gene_expression_data)){ 
     stop("Please enter a data frame for gene_expression_data!")
@@ -244,15 +360,32 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
   if (n.e2 == 0){
     stop("All entrez ids in gene_expression_data are not present in entities data frame!")
   }
-  cat(paste((n.e1-n.e2), "rows from gene_expression_data removed due", "\n", "to entrez ids being unrepsented in StringDB entities!", sep = " "))
-
+  cat(paste("(2/5)", (n.e1-n.e2), "rows from gene_expression_data removed due", "\n", "\t\t to entrez ids being unrepsented in network entities!\n", sep = " "))
+  
   # Make sure no entrez id in entities maps to two entities
+  n.e1 <- nrow(gene_expression_data)
   gene_expression_data.tmp <- merge(gene_expression_data, entities, by.x = "entrez" , by.y = "id")
+  n.e2 <- nrow(gene_expression_data.tmp)
+  if(n.e2 > n.e1){
+    stop("At least one entrez id in gene_expression_data maps to more than one id in network entities!")
+  }
   gene_expression_data <- data.frame(uid = gene_expression_data.tmp[,"uid"], val = gene_expression_data.tmp[,"val"], stringsAsFactors = F)
-    
-  u.hyps <- read_yaml(system.file("extdata", "u.hyps.yaml", package="QuaternaryProd"))
-  child.uid <- read_yaml(system.file("extdata", "child.uid.yaml", package="QuaternaryProd"))
-  child.sgn <- read_yaml(system.file("extdata", "child.sgn.yaml", package="QuaternaryProd"))
+  
+  u.hyps <- NULL
+  child.uid <- NULL
+  child.sgn <- NULL
+  if(!usingSTRINGdb){
+    cat("(3/5) Processing specified causal network...\n")
+    u.hyps <- unique(relations$srcuid)
+    child.uid <- lapply(u.hyps, function(x, relations) relations$trguid[which(relations$srcuid == x)], relations = relations)
+    child.sgn <- lapply(u.hyps, function(x, relations) ifelse(relations$mode[which(relations$srcuid == x)] == 1,
+                                                              1, ifelse(relations$mode[which(relations$srcuid == x)] == -1, -1, 0)), relations = relations)
+  }else{
+    cat("(3/5) Loading STRINGdb causal network...\n")
+    u.hyps <- read_yaml(system.file("extdata", "u.hyps.yaml", package="QuaternaryProd"))
+    child.uid <- read_yaml(system.file("extdata", "child.uid.yaml", package="QuaternaryProd"))
+    child.sgn <- read_yaml(system.file("extdata", "child.sgn.yaml", package="QuaternaryProd"))
+  }
   
   # Get the value of regulation of the children from the gene expression data
   child.val <- lapply(child.uid, function(x, gene_expression_data) 
@@ -269,6 +402,10 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
                         'total.reachable', 'significant.reachable', 'total.ambiguous', 'significant.ambiguous',
                         'unknown', 'pvalue')
   
+  cat("(4/5) Computing P-values...\n")
+  if(progressBar){
+    pb <- txtProgressBar(min = 1, max = length(u.hyps), style = 3)
+  }
   
   for(p.s in 1:length(u.hyps)){
 
@@ -332,13 +469,23 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
     results[(2*p.s), 10] <- nrp + nrm
     results[(2*p.s), 11] <- qZero
     results[(2*p.s), 12] <- pval$pval.down
+  
+    if(progressBar){  
+      setTxtProgressBar(pb, p.s)
+    }
+    
   }
   
+  if(progressBar){
+    close(pb)
+  }  
+    
   results.tmp1 <- results[which(results$pvalue > -1),]
   results.tmp1 <- results.tmp1[order(results.tmp1$pvalue),]
   results.tmp2 <- results[which(results$pvalue == -1),]
   results <- rbind(results.tmp1, results.tmp2)
   rownames(results) <- 1:nrow(results)
+  cat("(5/5) Done.\n")
   
   return(results)
   

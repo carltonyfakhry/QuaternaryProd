@@ -83,13 +83,15 @@ One bioinformatic application is to test how well protein-protein causal network
   
 ## Functionality for working with the Homo sapien causal network from STRINGdb
 
-\(\indent\) \(\indent\) \(\indent\) \(\indent\) Here we provide functionality for using **QuaternaryProd** with the STRINGdb Homo Sapien causal network (version 10) provided under the [creative commons license](https://creativecommons.org/licenses/by/3.0/). 
+\(\indent\) \(\indent\) \(\indent\) \(\indent\) Here we provide functionality for using **QuaternaryProd** with the STRINGdb Homo Sapien causal network (version 10) provided under the [creative commons license](https://creativecommons.org/licenses/by/3.0/).
+
 
 ### Compute Pvalues Over the Network
-\indent  Given new gene expression data, we can compute the scores and p-values for all regulators in the STRINGdb Homo Sapien causal network using the specialized `RunCRE_HSAStringDB` function. We use the gene expression data sets that were used in [1]. The data sets contain the c-Myc and E2F3 expression signatures. Note that the results may differ from those reported in [2] since the network was parsed differently.
+\indent  Given new gene expression data, we can compute the scores and p-values for all regulators in the STRINGdb Homo Sapien causal network using the specialized `RunCRE_HSAStringDB` function. Note that the user can specify and use other causal networks with `RunCRE_HSAStringDB`. We use the gene expression data sets that were used in [1]. The data sets contain the c-Myc and E2F3 expression signatures. Note that the results may differ from those reported in [2] since the network was parsed differently.
 
 #### Load Gene Expression Data
 First, we load all the data sets. The gene expression data sets must have the following columns: 1- `entrez` column corresponding to the entrez id of the gene, 2- `pvalue` column corresponding to the pvalue of the gene, 3- `fc` column corresponding to the fold change of the gene. After we load the data sets, we make sure that there are no duplicated entrez ids in the data sets.
+
 
 ```{r, message=FALSE}
 library(QuaternaryProd)
@@ -117,14 +119,15 @@ myc <- myc[!duplicated(myc$entrez),]
 
 We can now compute the Quaternary Dot Product Scoring Statistic over STRINGdb using the following:
 
-```{r, message=FALSE}
+```{r, message=FALSE, progress=FALSE}
 # Compute the Quaternary Dot Product Scoring Statistic for only statistically
 # significant regulators
 quaternary_results <- RunCRE_HSAStringDB(e2f3, method = "Quaternary",
                                    fc.thresh = log2(1.3), pval.thresh = 0.05,
-                                   only.significant.pvalues = TRUE, 
+                                   only.significant.pvalues = TRUE,
                                    significance.level = 0.05,
-                                   epsilon = 1e-16)
+                                   epsilon = 1e-16, progressBar = FALSE,
+                                   relations = NULL, entities = NULL)
 quaternary_results[1:4, c("uid","symbol","regulation","pvalue")]
 ```
 <br/>
@@ -135,12 +138,13 @@ quaternary_results[1:4, c("uid","symbol","regulation","pvalue")]
 
 To compute the Ternary Dot Product Statistic over STRINGdb we can use the following:
 
-```{r, message=FALSE}
+```{r, message=FALSE, progress=FALSE}
 ternary_results <- RunCRE_HSAStringDB(myc, method = "Ternary",
                                       fc.thresh = log2(1.3), pval.thresh = 0.05,
                                       only.significant.pvalues = TRUE,
                                       significance.level = 0.05,
-                                      epsilon = 1e-16)
+                                      epsilon = 1e-16, progressBar = FALSE,
+                                      relations = NULL, entities = NULL)
 ternary_results[1:4, c("uid","symbol","regulation","pvalue")]
 ```
 <br/>
@@ -148,13 +152,14 @@ ternary_results[1:4, c("uid","symbol","regulation","pvalue")]
 
 We see that this method retrieves MYC as a significant regulator. To compute the Enrichment test over STRINGdb we can use the following:
 
-```{r, message=FALSE}
+```{r, message=FALSE, progress=TRUE, quiet = TRUE}
 enrichment_results <- RunCRE_HSAStringDB(myc, method = "Enrichment",
                                          fc.thresh = log2(1.3), pval.thresh = 0.05,
                                          only.significant.pvalues = TRUE,
                                          significance.level = 0.05,
-                                         epsilon = 1e-16)
-enrichment_results[1:10, c("uid","symbol","regulation","pvalue")]
+                                         epsilon = 1e-16, progressBar = FALSE,
+                                         relations = NULL, entities = NULL)
+enrichment_results[enrichment_results$symbol == "MYC", c("symbol","regulation","pvalue")]
 ```
 <br/>
 <br/>
