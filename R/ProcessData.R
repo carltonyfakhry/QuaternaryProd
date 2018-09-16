@@ -241,6 +241,10 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
     stop("Epsilon must be positive numeric number >= 0 and <= 1!\n")
   }
   
+  # progressBar must be logical value.
+  if (length(progressBar) != 1 || !is.logical(progressBar)){
+    stop("progressBar must be a logical value!")
+  }
   
   # Check relations and entities
   usingSTRINGdb <- NULL
