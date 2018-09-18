@@ -5,12 +5,15 @@
 \title{This function runs a causal relation engine by computing the Quaternary Dot
 Product Scoring Statistic, Ternary Dot Product Scoring Statistic or the Enrichment test over the Homo
 Sapien STRINGdb causal network (version 10 provided under the Creative Commons license: 
-https://creativecommons.org/licenses/by/3.0/).}
+https://creativecommons.org/licenses/by/3.0/). Note that the user has the option of specifying other causal networks
+with this function.}
 \usage{
 RunCRE_HSAStringDB(gene_expression_data, method = "Quaternary", 
                     fc.thresh = log2(1.3), pval.thresh = 0.05, 
-                    only.significant.pvalues = FALSE, significance.level = 0.05,
-                    epsilon = 1e-16)
+                    only.significant.pvalues = FALSE, 
+                    significance.level = 0.05,
+                    epsilon = 1e-16, progressBar = TRUE, 
+                    relations = NULL, entities = NULL)
 }
 \arguments{
 \item{gene_expression_data}{A data frame for gene expression data. The \code{gene_expression_data} data frame must have three columns \code{entrez}, 
@@ -32,7 +35,24 @@ are computed otherwise uncomputed p-values are set to -1. The default value is \
 \item{significance.level}{When \code{only.significant.pvalues = TRUE}, only p-values which are less than or equal to 
 \code{significance.level} are computed. The default value is \code{significance.level = 0.05}.}
 
-\item{epsilon}{Threshold for probabilities of matrices. Default value is 1e-16.}
+\item{epsilon}{Threshold for probabilities of matrices. Default value is \code{threshold = 1e-16}.}
+
+\item{progressBar}{Progress bar for the percentage of computed p-values for the regulators in the network. Default
+value is \code{progressBar = TRUE}.}
+
+\item{relations}{A data frame containing pairs of connected entities in a causal network,
+and the type of causal relation between them. The data frame must have three columns with column names: \emph{srcuid}, 
+\emph{trguid} and \emph{mode} respective of order. \emph{srcuid} stands for source entity, \emph{trguid} stands for 
+target entity and \emph{mode} stands for the type of relation between \emph{srcuid} and \emph{trguid}. The relation 
+has to be one of \emph{+1} for \emph{upregulation}, \emph{-1} for \emph{downregulation} or \emph{0} for regulation without
+specified direction of regulation. All three columns must be of type integer. Default value is \code{relations = NULL}.}
+
+\item{entities}{A data frame of mappings for all entities present in data frame \emph{relations}. \emph{entities} must contain
+four columns: \emph{uid}, \emph{id}, \emph{symbol} and \emph{type} respective of order. \emph{uid} must be 
+of type integer and \emph{id}, \emph{symbol} and \emph{type} must be of type character. \emph{uid} includes every source and target 
+node in the network (i.e \emph{relations}),
+\emph{id} is the id of \emph{uid} (e.g entrez id of an mRNA), \emph{symbol} is the symbol of \emph{id} and \emph{type} 
+is the type of entity of \emph{id} (e.g mRNA, protein, drug or compound). Default value is \code{entities = NULL}.}
 }
 \value{
 This function returns a data frame containing parameters concerning the method used. The p-values of each
@@ -41,7 +61,7 @@ This function returns a data frame containing parameters concerning the method u
         names of the data frame are:
         
 \itemize{        
-\item  \code{uid} The regulator in the STRINGdb network.
+\item  \code{uid} The regulator in the causal network.
 \item \code{symbol} Symbol of the regulator. 
 \item \code{regulation} Direction of regulation of the regulator.
 \item \code{correct.pred} Number of correct predictions in \code{gene_expression_data} when compared to predictions made
@@ -56,7 +76,7 @@ This function returns a data frame containing parameters concerning the method u
                              knowing the direction of regulation.
 \item \code{significant.ambiguous} Total number of children of the given regulator which are regulated by the given regulator without
                              knowing the direction of regulation and are also present in \code{gene_expression_data}.  
-\item \code{unknown} Number of target nodes in the STRINGdb causal network which do not interact with the given regulator.
+\item \code{unknown} Number of target nodes in the causal network which do not interact with the given regulator.
 \item \code{pvalue} P-value of the score computed according to the selected method. If \code{only.significant.pvalues = TRUE}
                     and the \code{pvalue} of the regulator is greater than \code{significance.level}, then
                     the p-value is not computed and is set to a value of -1.
@@ -66,7 +86,8 @@ This function returns a data frame containing parameters concerning the method u
 This function runs a causal relation engine by computing the Quaternary Dot
              Product Scoring Statistic, Ternary Dot Product Scoring Statistic or the Enrichment test over the Homo
              Sapien STRINGdb causal network (version 10 provided under the Creative Commons license: 
-             https://creativecommons.org/licenses/by/3.0/).
+             https://creativecommons.org/licenses/by/3.0/). Note that the user has the option of specifying other causal networks
+             with this function.
 }
 \examples{
 
@@ -80,12 +101,10 @@ e2f3 <- e2f3[!duplicated(e2f3$entrez),]
 
 # Compute the Quaternary Dot Product Scoring statistic for statistically significant
 # regulators in the STRINGdb network
-quaternary_results <- RunCRE_HSAStringDB(e2f3, method = "Quaternary",
+enrichment_results <- RunCRE_HSAStringDB(e2f3, method = "Enrichment",
                              fc.thresh = log2(1.3), pval.thresh = 0.05,
                              only.significant.pvalues = TRUE)
-# Get FDR corrected p-values
-quaternary_results["qvalue"] <- p.adjust(quaternary_results$pvalue, method = "fdr")
-quaternary_results[1:4, c("uid","symbol","regulation","pvalue","qvalue")]
+enrichment_results[1:4, c("uid","symbol","regulation","pvalue")]
 
 }
 \references{

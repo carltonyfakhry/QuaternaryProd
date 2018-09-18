@@ -111,8 +111,10 @@ check_entities <- function(entities){
 #' 
 #' @usage RunCRE_HSAStringDB(gene_expression_data, method = "Quaternary", 
 #'                     fc.thresh = log2(1.3), pval.thresh = 0.05, 
-#'                     only.significant.pvalues = FALSE, significance.level = 0.05,
-#'                     epsilon = 1e-16, progressBar = TRUE, relations = NULL, entities = NULL) 
+#'                     only.significant.pvalues = FALSE, 
+#'                     significance.level = 0.05,
+#'                     epsilon = 1e-16, progressBar = TRUE, 
+#'                     relations = NULL, entities = NULL) 
 #' 
 #' @param gene_expression_data A data frame for gene expression data. The \code{gene_expression_data} data frame must have three columns \code{entrez}, 
 #'        \code{fc} and \code{pvalue}. \code{entrez} denotes the entrez id of a given gene, \code{fc} denotes
@@ -193,12 +195,10 @@ check_entities <- function(entities){
 #' 
 #' # Compute the Quaternary Dot Product Scoring statistic for statistically significant
 #' # regulators in the STRINGdb network
-#' quaternary_results <- RunCRE_HSAStringDB(e2f3, method = "Quaternary",
+#' enrichment_results <- RunCRE_HSAStringDB(e2f3, method = "Enrichment",
 #'                              fc.thresh = log2(1.3), pval.thresh = 0.05,
 #'                              only.significant.pvalues = TRUE)
-#' # Get FDR corrected p-values
-#' quaternary_results["qvalue"] <- p.adjust(quaternary_results$pvalue, method = "fdr")
-#' quaternary_results[1:4, c("uid","symbol","regulation","pvalue","qvalue")]
+#' enrichment_results[1:4, c("uid","symbol","regulation","pvalue")]
 #'
 #' @export
 
