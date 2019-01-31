@@ -64,7 +64,7 @@ check_relations <- function(relations, entities){
 # This function checks the validity of the entities data frame
 check_entities <- function(entities){
 
-  if(ncol(entities) != 4 | !all(names(entities) == c("uid", "id", "ensembleid", "symbol"))){
+  if(ncol(entities) != 4 | !all(names(entities) == c("uid", "id", "symbol", "type"))){
     stop("Please provide a valid entities data frame containing columns: uid, id, symbol and type!")
   }
     
