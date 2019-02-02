@@ -65,7 +65,7 @@ check_relations <- function(relations, entities){
 check_entities <- function(entities){
 
   if(ncol(entities) != 4 | !all(names(entities) == c("uid", "id", "ensembleid", "symbol"))){
-    stop("Please provide a valid entities data frame containing columns: uid, id, symbol and type!")
+    stop("Please provide a valid entities data frame containing columns: uid, id, ensembleid and symbol!")
   }
     
   # Check for NAs in entities
@@ -139,11 +139,11 @@ check_entities <- function(entities){
 #'        has to be one of \emph{+1} for \emph{upregulation}, \emph{-1} for \emph{downregulation} or \emph{0} for regulation without
 #'        specified direction of regulation. All three columns must be of type integer. Default value is \code{relations = NULL}.
 #' @param entities A data frame of mappings for all entities present in data frame \emph{relations}. \emph{entities} must contain
-#'        four columns: \emph{uid}, \emph{id}, \emph{symbol} and \emph{type} respective of order. \emph{uid} must be 
-#'        of type integer and \emph{id}, \emph{symbol} and \emph{type} must be of type character. \emph{uid} includes every source and target 
+#'        four columns: \emph{uid}, \emph{id}, \emph{ensembleid} and \emph{symbol} respective of order. \emph{uid} must be 
+#'        of type integer and \emph{id}, \emph{ensembleid} and \emph{symbol} must be of type character. \emph{uid} includes every source and target 
 #'        node in the network (i.e \emph{relations}),
-#'        \emph{id} is the id of \emph{uid} (e.g entrez id of an mRNA), \emph{symbol} is the symbol of \emph{id} and \emph{type} 
-#'        is the type of entity of \emph{id} (e.g mRNA, protein, drug or compound). Default value is \code{entities = NULL}.
+#'        \emph{id} is the id of \emph{uid} (e.g entrez id of an mRNA), \emph{ensembleid} is the ensemble id of \emph{id} and \emph{symbol} 
+#'        is the symbol of \emph{id}. Default value is \code{entities = NULL}.
 #'           
 #' @return This function returns a data frame containing parameters concerning the method used. The p-values of each
 #'         of the regulators is also computed, and the data frame
