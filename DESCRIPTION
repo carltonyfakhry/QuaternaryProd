@@ -7,7 +7,9 @@ Date: 2015-10-22
 Authors@R: c(
     person("Carl Tony", "Fakhry", email = "cfakhry@cs.umb.edu", role = c("cre","aut")),
     person("Ping", "Chen", role = "ths"),
-    person("Kourosh", "Zarringhalam", role = c("aut","ths")))
+    person("Kourosh", "Zarringhalam", role = c("aut","ths")),
+    person("Kamil", "Slowikowski", role = c("ctb"), comment = c(ORCID = "0000-0002-2843-6370"))
+    )
 Description: QuaternaryProd is an R package that performs causal reasoning on biological 
              networks, including publicly available networks such as STRINGdb. QuaternaryProd 
              is an open-source alternative to commercial products such as Inginuity Pathway 
@@ -28,12 +30,12 @@ Depends:
     R (>= 3.2.0)
 Imports:
     Rcpp (>= 0.11.3),
-    yaml (>= 2.1.18)
+    yaml (>= 2.1.18),
+    BiocParallel
 Suggests:
     knitr
 LinkingTo: Rcpp
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Encoding: UTF-8
-
