@@ -201,6 +201,7 @@ check_entities <- function(entities){
 #' enrichment_results[1:4, c("uid","symbol","regulation","pvalue")]
 #'
 #' @export
+#' @importFrom yaml read_yaml
 
 RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary", 
                                fc.thresh = log2(1.3), pval.thresh = 0.05,
