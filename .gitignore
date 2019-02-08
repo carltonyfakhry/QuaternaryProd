@@ -1,0 +1,10 @@
+# RStudio files
+.Rproj.user/
+
+# Compiled objects
+*.o
+*.so
+*.dll
+
+# macOS
+.DS_Store

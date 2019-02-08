@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^.*\.DS_Store$
+^\.Rproj\.user$
+vignettes/*.aux
+vignettes/*.fdb_latexmk
+vignettes/*.fls
+vignettes/*.out
