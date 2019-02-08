@@ -402,40 +402,24 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
                           getGeneVals(unique.children[which(!(unique.children %in% x))], gene_expression_data), 
                           gene_expression_data = gene_expression_data, unique.children = unique.children)
   
-  results <- data.frame(matrix(0, nrow  = 2 * length(u.hyps), ncol = 12), stringsAsFactors = F)
-  colnames(results) <- c('uid', 'symbol', 'regulation', 'correct.pred', 'incorrect.pred', 'score',
-                        'total.reachable', 'significant.reachable', 'total.ambiguous', 'significant.ambiguous',
-                        'unknown', 'pvalue')
-  
   cat("(4/5) Computing P-values...\n")
-  if(progressBar){
-    pb <- txtProgressBar(min = 1, max = length(u.hyps), style = 3)
-  }
-  
-  for(p.s in 1:length(u.hyps)){
 
-    results[(2*(p.s-1)+1), 1] <- entities$ensembleid[which(entities$uid == u.hyps[p.s])]
-    results[(2*p.s), 1]       <- entities$ensembleid[which(entities$uid == u.hyps[p.s])]
-    results[(2*(p.s-1)+1), 2] <- entities$symbol[which(entities$uid == u.hyps[p.s])]
-    results[(2*p.s), 2]       <- entities$symbol[which(entities$uid == u.hyps[p.s])]
-    results[(2*(p.s-1)+1), 3] <- 'up'
-    results[(2*p.s), 3]       <- 'down'
+  retval <- BiocParallel::bplapply(seq_along(u.hyps), function(p.s) {
+    npp = sum(child.sgn[[p.s]] == 1 &  child.val[[p.s]] == 1)
+    npm = sum(child.sgn[[p.s]] == 1 &  child.val[[p.s]] == -1)
+    npz = sum(child.sgn[[p.s]] == 1 &  child.val[[p.s]] == 0)
     
-    npp = length(which(child.sgn[[p.s]] == 1 &  child.val[[p.s]] == 1))
-    npm = length(which(child.sgn[[p.s]] == 1 &  child.val[[p.s]] == -1))
-    npz = length(which(child.sgn[[p.s]] == 1 &  child.val[[p.s]] == 0))
+    nmp = sum(child.sgn[[p.s]] == -1 &  child.val[[p.s]] == 1)
+    nmm = sum(child.sgn[[p.s]] == -1 &  child.val[[p.s]] == -1)
+    nmz = sum(child.sgn[[p.s]] == -1 &  child.val[[p.s]] == 0)
     
-    nmp = length(which(child.sgn[[p.s]] == -1 &  child.val[[p.s]] == 1))
-    nmm = length(which(child.sgn[[p.s]] == -1 &  child.val[[p.s]] == -1))
-    nmz = length(which(child.sgn[[p.s]] == -1 &  child.val[[p.s]] == 0))
+    nrp = sum(child.sgn[[p.s]] == 0 &  child.val[[p.s]] == 1)
+    nrm = sum(child.sgn[[p.s]] == 0 &  child.val[[p.s]] == -1)
+    nrz = sum(child.sgn[[p.s]] == 0 &  child.val[[p.s]] == 0)
     
-    nrp = length(which(child.sgn[[p.s]] == 0 &  child.val[[p.s]] == 1))
-    nrm = length(which(child.sgn[[p.s]] == 0 &  child.val[[p.s]] == -1))
-    nrz = length(which(child.sgn[[p.s]] == 0 &  child.val[[p.s]] == 0))
-    
-    nzp = length(which(non.child.val[[p.s]] == 1))
-    nzm = length(which(non.child.val[[p.s]] == -1))
-    nzz = length(which(non.child.val[[p.s]] == 0))
+    nzp = sum(non.child.val[[p.s]] == 1)
+    nzm = sum(non.child.val[[p.s]] == -1)
+    nzz = sum(non.child.val[[p.s]] == 0)
     
     if (method == "Quaternary"){
       pval <- runCRE(npp, npm, npz, nmp, nmm, nmz, nrp, nrm, nrz, nzp, nzm, nzz, method = 'Quaternary',
@@ -455,36 +439,54 @@ RunCRE_HSAStringDB <- function(gene_expression_data, method = "Quaternary",
     qR     <- nrp + nrm + nrz
     qZero  <- nzp + nzm + nzz
     
-    results[(2*(p.s-1)+1), 4]  <- npp + nmm
-    results[(2*(p.s-1)+1), 5]  <- npm + nmp
-    results[(2*(p.s-1)+1), 6]  <- npp + nmm - (npm + nmp)
-    results[(2*(p.s-1)+1), 7]  <- qPlus + qMinus + qR
-    results[(2*(p.s-1)+1), 8]  <- npp + npm + nmp + nmm + nrp + nrm
-    results[(2*(p.s-1)+1), 9]  <- qR
-    results[(2*(p.s-1)+1), 10] <- nrp + nrm
-    results[(2*(p.s-1)+1), 11] <- qZero
-    results[(2*(p.s-1)+1), 12] <- pval$pval.up
+    ix <- which(entities$uid == u.hyps[p.s])
     
-    results[(2*p.s), 4]  <- nmp + npm
-    results[(2*p.s), 5]  <- npp + nmm
-    results[(2*p.s), 6]  <- nmp + npm - (npp + nmm)
-    results[(2*p.s), 7]  <- qPlus + qMinus + qR
-    results[(2*p.s), 8]  <- npp + npm + nmp + nmm + nrp + nrm
-    results[(2*p.s), 9]  <- qR
-    results[(2*p.s), 10] <- nrp + nrm
-    results[(2*p.s), 11] <- qZero
-    results[(2*p.s), 12] <- pval$pval.down
+    res1 <- c(
+      entities$ensembleid[ix],
+      entities$symbol[ix],
+      'up',
+      npp + nmm,
+      npm + nmp,
+      npp + nmm - (npm + nmp),
+      qPlus + qMinus + qR,
+      npp + npm + nmp + nmm + nrp + nrm,
+      qR,
+      nrp + nrm,
+      qZero,
+      pval$pval.up
+    )
+    
+    res2 <- c(
+      entities$ensembleid[ix],
+      entities$symbol[ix],
+      'down',
+      nmp + npm,
+      npp + nmm,
+      nmp + npm - (npp + nmm),
+      qPlus + qMinus + qR,
+      npp + npm + nmp + nmm + nrp + nrm,
+      qR,
+      nrp + nrm,
+      qZero,
+      pval$pval.down
+    )
+    
+    data.frame(rbind(res1, res2), stringsAsFactors = FALSE)
+  })
   
-    if(progressBar){  
-      setTxtProgressBar(pb, p.s)
-    }
-    
-  }
+  results <- data.frame(do.call(rbind, retval), stringsAsFactors = FALSE)
+  colnames(results) <- c(
+    'uid', 'symbol', 'regulation', 'correct.pred', 'incorrect.pred', 'score',
+    'total.reachable', 'significant.reachable', 'total.ambiguous', 'significant.ambiguous',
+    'unknown', 'pvalue'
+  )
+  numeric_cols <- c(
+    'correct.pred', 'incorrect.pred', 'score',
+    'total.reachable', 'significant.reachable', 'total.ambiguous',
+    'significant.ambiguous', 'unknown', 'pvalue'
+  )
+  results[, numeric_cols] <- sapply(results[, numeric_cols], as.numeric)
   
-  if(progressBar){
-    close(pb)
-  }  
-    
   results.tmp1 <- results[which(results$pvalue > -1),]
   results.tmp1 <- results.tmp1[order(results.tmp1$pvalue),]
   results.tmp2 <- results[which(results$pvalue == -1),]
